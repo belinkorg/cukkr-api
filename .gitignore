@@ -1,0 +1,85 @@
+# ===========================
+# Go Build & Binary Artifacts
+# ===========================
+bin/
+build/
+dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# ===========================
+# Go Modules & Dependencies
+# ===========================
+vendor/
+go.work
+go.work.sum
+
+# ===========================
+# Task / Make / Migration
+# ===========================
+.migrate/
+migrations/*.tmp
+coverage.out
+coverage.html
+
+# ===========================
+# Configuration & Secrets
+# ===========================
+.env
+.env.local
+.env.*
+!.env.example
+config/local.yaml
+config/dev.yaml
+*.local.json
+*.local.yaml
+*.local.yml
+
+# ===========================
+# IDE / Editor Files
+# ===========================
+.idea/
+.vscode/
+*.iml
+
+# ===========================
+# OS Specific Files
+# ===========================
+.DS_Store
+Thumbs.db
+
+# ===========================
+# Logs & Temp Files
+# ===========================
+logs/
+*.log
+tmp/
+*.tmp
+
+# ===========================
+# Docker
+# ===========================
+.docker/
+docker-compose.override.yml
+.env.docker
+
+# ===========================
+# Coverage / Test
+# ===========================
+*.coverprofile
+*.cov
+*.lcov
+
+# ===========================
+# Cache & Build Tools
+# ===========================
+.cache/
+.task/
+.gocache/
+.gotmp/
+*.swp

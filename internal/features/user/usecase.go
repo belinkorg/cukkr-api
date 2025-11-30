@@ -1,0 +1,248 @@
+package user
+
+import (
+	"bLink-app/pkg/errors"
+	"bLink-app/pkg/jwt"
+	"bLink-app/pkg/logger"
+	"context"
+	"golang.org/x/crypto/bcrypt"
+	"net/http"
+	"time"
+)
+
+type Usecase interface {
+	Register(ctx context.Context, req *RegisterRequest) (*UserResponse, error)
+	Login(ctx context.Context, req *LoginRequest) (*LoginResponse, error)
+	GetProfile(ctx context.Context, userID string) (*UserResponse, error)
+	GetAllUsers(ctx context.Context, limit, offset int) ([]UserResponse, int64, error)
+	UpdateProfile(ctx context.Context, userID string, req *UpdateProfileRequest) (*UserResponse, error)
+	ChangePassword(ctx context.Context, userID string, req *ChangePasswordRequest) error
+	DeleteAccount(ctx context.Context, userID string) error
+}
+
+type usecase struct {
+	repo       Repository
+	jwtService *jwt.JWTService
+	logger     *logger.Logger
+}
+
+func NewUsecase(repo Repository, jwtService *jwt.JWTService, logger *logger.Logger) Usecase {
+	return &usecase{
+		repo:       repo,
+		jwtService: jwtService,
+		logger:     logger,
+	}
+}
+
+func (u *usecase) Register(ctx context.Context, req *RegisterRequest) (*UserResponse, error) {
+	// Check if email already exists
+	existingUser, err := u.repo.FindByEmail(ctx, req.Email)
+	if err == nil && existingUser != nil {
+		u.logger.WithField("email", req.Email).Warn("Email already registered")
+		return nil, errors.New(http.StatusConflict, "Email already registered")
+	}
+
+	// Hash password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		u.logger.WithError(err).Error("Failed to hash password")
+		return nil, errors.New(http.StatusInternalServerError, "Internal server error")
+	}
+
+	user := &User{
+		Email:       req.Email,
+		Password:    string(hashedPassword),
+		FullName:    req.FullName,
+		PhoneNumber: req.PhoneNumber,
+		IsActive:    true,
+		IsVerified:  false,
+	}
+
+	if err := u.repo.Create(ctx, user); err != nil {
+		u.logger.WithError(err).Error("Failed to create user")
+		return nil, errors.New(http.StatusInternalServerError, "Internal server error")
+	}
+
+	u.logger.WithFields(map[string]interface{}{
+		"user_id": user.ID,
+		"email":   user.Email,
+	}).Info("User registered successfully")
+
+	return toUserResponse(user), nil
+}
+
+func (u *usecase) Login(ctx context.Context, req *LoginRequest) (*LoginResponse, error) {
+	// Find user by email
+	user, err := u.repo.FindByEmail(ctx, req.Email)
+	if err != nil {
+		u.logger.WithField("email", req.Email).Warn("Email not found")
+		return nil, errors.New(http.StatusUnauthorized, "Email not found")
+	}
+
+	// Check if user is active
+	if !user.IsActive {
+		u.logger.WithField("user_id", user.ID).Warn("Login attempt for inactive user")
+		return nil, errors.New(http.StatusForbidden, "User is inactive")
+	}
+
+	// Verify password
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+		u.logger.WithField("user_id", user.ID).Warn("Invalid password")
+		return nil, errors.New(http.StatusUnauthorized, "Invalid email or password")
+	}
+
+	// Generate JWT token
+	token, err := u.jwtService.GenerateToken(user.ID, user.Email) // We'll use email instead of numeric ID
+	if err != nil {
+		u.logger.WithError(err).Error("Failed to generate token")
+		return nil, err
+	}
+
+	// Update last login
+	if err := u.repo.UpdateLastLogin(ctx, user.ID); err != nil {
+		u.logger.WithFields(map[string]interface{}{
+			"error":   err.Error(),
+			"user_id": user.ID,
+		}).Warn("Failed to update last login")
+	}
+
+	u.logger.WithField("user_id", user.ID).Info("User logged in successfully")
+
+	return &LoginResponse{
+		Token: token,
+		User:  *toUserResponse(user),
+	}, nil
+}
+
+func (u *usecase) GetProfile(ctx context.Context, userID string) (*UserResponse, error) {
+	user, err := u.repo.FindByID(ctx, userID)
+	if err != nil {
+		u.logger.WithFields(map[string]interface{}{
+			"error":   err.Error(),
+			"user_id": userID,
+		}).Error("Failed to get user profile")
+		return nil, err
+	}
+
+	return toUserResponse(user), nil
+}
+
+func (u *usecase) GetAllUsers(ctx context.Context, limit, offset int) ([]UserResponse, int64, error) {
+	users, err := u.repo.FindAll(ctx, limit, offset)
+	if err != nil {
+		u.logger.WithError(err).Error("Failed to get all users")
+		return nil, 0, err
+	}
+
+	total, err := u.repo.CountAll(ctx)
+	if err != nil {
+		u.logger.WithError(err).Error("Failed to count users")
+		return nil, 0, err
+	}
+
+	return toUserResponses(users), total, nil
+}
+
+func (u *usecase) UpdateProfile(ctx context.Context, userID string, req *UpdateProfileRequest) (*UserResponse, error) {
+	user, err := u.repo.FindByID(ctx, userID)
+	if err != nil {
+		return nil, errors.New(http.StatusNotFound, "User not found")
+	}
+
+	// Update fields
+	if req.FullName != "" {
+		user.FullName = req.FullName
+	}
+	if req.PhoneNumber != "" {
+		user.PhoneNumber = req.PhoneNumber
+	}
+	if req.Address != "" {
+		user.Address = req.Address
+	}
+
+	if err := u.repo.Update(ctx, user); err != nil {
+		u.logger.WithError(err).Error("Failed to update user profile")
+		return nil, err
+	}
+
+	u.logger.WithFields(map[string]interface{}{
+		"user_id": user.ID,
+	}).Info("User profile updated successfully")
+
+	return toUserResponse(user), nil
+}
+
+func (u *usecase) ChangePassword(ctx context.Context, userID string, req *ChangePasswordRequest) error {
+	user, err := u.repo.FindByID(ctx, userID)
+	if err != nil {
+		return errors.New(http.StatusNotFound, "User not found")
+	}
+
+	// Verify old password
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.OldPassword)); err != nil {
+		u.logger.WithField("user_id", userID).Warn("Change password attempt with wrong old password")
+		return errors.New(http.StatusBadRequest, "Wrong old password")
+	}
+
+	// Hash new password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		u.logger.WithError(err).Error("Failed to hash new password")
+		return errors.New(http.StatusInternalServerError, "Internal server error")
+	}
+
+	user.Password = string(hashedPassword)
+
+	if err := u.repo.Update(ctx, user); err != nil {
+		u.logger.WithError(err).Error("Failed to update password")
+		return err
+	}
+
+	u.logger.WithField("user_id", user.ID).Info("Password changed successfully")
+
+	return nil
+}
+
+func (u *usecase) DeleteAccount(ctx context.Context, userID string) error {
+	if _, err := u.repo.FindByID(ctx, userID); err != nil {
+		return errors.New(http.StatusNotFound, "User not found")
+	}
+
+	if err := u.repo.Delete(ctx, userID); err != nil {
+		u.logger.WithError(err).Error("Failed to delete user account")
+		return err
+	}
+
+	u.logger.WithField("user_id", userID).Info("User account deleted successfully")
+
+	return nil
+}
+
+func toUserResponse(u *User) *UserResponse {
+	var lastLogin *string
+	if u.LastLoginAt != nil {
+		lastLoginStr := u.LastLoginAt.Format(time.RFC3339)
+		lastLogin = &lastLoginStr
+	}
+
+	return &UserResponse{
+		ID:          u.ID,
+		Email:       u.Email,
+		FullName:    u.FullName,
+		PhoneNumber: u.PhoneNumber,
+		Address:     u.Address,
+		IsActive:    u.IsActive,
+		IsVerified:  u.IsVerified,
+		LastLoginAt: lastLogin,
+		CreatedAt:   u.CreatedAt.Format(time.RFC3339),
+		UpdatedAt:   u.UpdatedAt.Format(time.RFC3339),
+	}
+}
+
+func toUserResponses(users []User) []UserResponse {
+	responses := make([]UserResponse, len(users))
+	for i, u := range users {
+		responses[i] = *toUserResponse(&u)
+	}
+	return responses
+}

@@ -1,0 +1,183 @@
+version: "3"
+
+tasks:
+  # Default task
+  default:
+    cmds:
+      - task: run
+    silent: true
+
+  # Run application
+  run:
+    desc: "Run application"
+    cmds:
+      - go run cmd/api/main.go
+
+  # Build binary
+  build:
+    desc: "Build binary"
+    cmds:
+      - go build -o bin/api cmd/api/main.go
+
+  # Run all tests
+  test:
+    desc: "Run all tests"
+    cmds:
+      - go test -v -cover ./...
+
+  # Run unit tests only
+  test-unit:
+    desc: "Run unit tests only"
+    cmds:
+      - go test -v -cover -short ./internal/features/...
+
+  # Run tests with coverage report
+  test-coverage:
+    desc: "Run tests with coverage report"
+    cmds:
+      - go test -v -coverprofile=coverage.out ./...
+      - go tool cover -html=coverage.out -o coverage.html
+
+  # Run specific test
+  test-specific:
+    desc: "Run specific test (use VAR: TEST=name)"
+    vars:
+      TEST: ""
+    cmds:
+      - go test -v -run {{.TEST}} ./...
+
+  # Clean build artifacts
+  clean:
+    desc: "Clean build artifacts"
+    cmds:
+      - rm -rf bin/
+      - rm -f coverage.out coverage.html
+
+  # Start all services
+  docker-up:
+    desc: "Start all docker services"
+    cmds:
+      - docker-compose up -d
+
+  # Stop all services
+  docker-down:
+    desc: "Stop all docker services and remove volumes"
+    cmds:
+      - docker-compose down -v
+
+  # View docker logs
+  docker-logs:
+    desc: "View docker logs"
+    cmds:
+      - docker-compose logs -f
+
+  # Install Swag (Swagger CLI)
+  swagger-install:
+    desc: "Install swagger CLI"
+    cmds:
+      - go install github.com/swaggo/swag/cmd/swag@latest
+
+  # Generate swagger documentation
+  swagger:
+    desc: "Generate swagger documentation"
+    cmds:
+      - swag init -g cmd/api/main.go -o docs --parseDependency --parseInternal
+
+  swagger-fmt:
+    desc: "Format swagger comments"
+    cmds:
+      - swag fmt
+
+  # Create Migration file
+  migrate-create:
+    desc: "Create new migration file (usage: task migrate-create NAME=create_users_table)"
+    silent: true
+    vars:
+      NAME: '{{.NAME}}'
+    cmds:
+      - |
+        if [ -z "{{.NAME}}" ]; then
+          echo "❌ Error: please specify NAME, e.g. task migrate-create NAME=create_users_table"
+          exit 1
+        fi
+        mkdir -p migrations
+        migrate create -ext sql -dir migrations {{.NAME}}
+
+  # Database migration up
+  migrate-up:
+    desc: "Run database migration up"
+    cmds:
+      - go run cmd/migrate/main.go -action=up
+
+  # Database migration down
+  migrate-down:
+    desc: "Run database migration down"
+    cmds:
+      - go run cmd/migrate/main.go -action=down
+
+  # Check migration version
+  migrate-version:
+    desc: "Check current migration version"
+    cmds:
+      - go run cmd/migrate/main.go -action=version
+
+  # Force migration to specific version
+  migrate-force:
+    desc: "Force migration to specific version (usage: task migrate-force VERSION=0)"
+    cmds:
+      - |
+        if [ -z "{{.VERSION}}" ]; then
+          echo "❌ Error: VERSION is required. Example:";
+          echo "   task migrate-force VERSION=0"
+          exit 1
+        fi
+      - go run cmd/migrate/main.go -action=force -version={{.VERSION}}
+
+  # Tidy dependencies
+  tidy:
+    desc: "Tidy Go module dependencies"
+    cmds:
+      - go mod tidy
+
+  # Install dependencies
+  install:
+    desc: "Download Go module dependencies"
+    cmds:
+      - go mod download
+
+  # Generate mocks
+  mock:
+    desc: "Generate mocks"
+    cmds:
+      - echo "Generating mocks..."
+      - go generate ./...
+
+  # Run linter
+  lint:
+    desc: "Run Go linter"
+    cmds:
+      - golangci-lint run ./...
+
+  # Format code
+  fmt:
+    desc: "Format Go code"
+    cmds:
+      - go fmt ./...
+      - goimports -w .
+
+  # Start development environment
+  dev:
+    desc: "Start development environment (Docker + Migration + Run)"
+    cmds:
+      - task: docker-up
+      - echo "Waiting for databases to be ready..."
+      - sleep 5
+      - task: migrate-up
+      - echo "Development environment ready!"
+      - task: run
+
+  # Run tests in Docker
+  test-docker:
+    desc: "Run tests in Docker environment"
+    cmds:
+      - docker-compose -f docker-compose.test.yaml up --abort-on-container-exit --exit-code-from app

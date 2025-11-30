@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS orders
+(
+    id          VARCHAR(50) PRIMARY KEY,
+    user_id        VARCHAR(50)   NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL,
+    status VARCHAR(50) DEFAULT 'PENDING',
+    created_at  TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
