@@ -16,6 +16,7 @@ type UpdateProfileRequest struct {
 	FullName    string `json:"full_name" validate:"omitempty,min=3,max=255" example:"John Doe Updated"`
 	PhoneNumber string `json:"phone_number" validate:"omitempty,min=10,max=20" example:"+628123456789"`
 	Address     string `json:"address" example:"Jl. Sudirman No. 123"`
+	Bio         string `json:"bio" example:"This is my bio."`
 }
 
 type ChangePasswordRequest struct {
@@ -34,6 +35,8 @@ type UserResponse struct {
 	FullName    string  `json:"full_name" example:"John Doe"`
 	PhoneNumber string  `json:"phone_number" example:"+628123456789"`
 	Address     string  `json:"address" example:"Jl. Sudirman No. 123"`
+	Bio         string  `json:"bio" example:"This is my bio."`
+	PhotoURL    string  `json:"photo_url" example:"https://example.com/photos/johndoe.jpg"`
 	IsActive    bool    `json:"is_active" example:"true"`
 	IsVerified  bool    `json:"is_verified" example:"false"`
 	LastLoginAt *string `json:"last_login_at" example:"2024-01-15T10:30:00Z"`

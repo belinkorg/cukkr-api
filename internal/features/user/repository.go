@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
@@ -13,6 +14,7 @@ type Repository interface {
 	Create(ctx context.Context, user *User) error
 	FindByID(ctx context.Context, id string) (*User, error)
 	FindByEmail(ctx context.Context, email string) (*User, error)
+	FindByPhoneNumber(ctx context.Context, phoneNumber string) (*User, error)
 	FindAll(ctx context.Context, limit, offset int) ([]User, error)
 	Update(ctx context.Context, user *User) error
 	Delete(ctx context.Context, id string) error
@@ -43,7 +45,7 @@ func (r *repository) Create(ctx context.Context, user *User) error {
 func (r *repository) FindByID(ctx context.Context, id string) (*User, error) {
 	var user User
 	if err := r.db.WithContext(ctx).Where("id = ?", id).First(&user).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		}
 		return nil, err
@@ -55,12 +57,23 @@ func (r *repository) FindByID(ctx context.Context, id string) (*User, error) {
 func (r *repository) FindByEmail(ctx context.Context, email string) (*User, error) {
 	var user User
 	if err := r.db.WithContext(ctx).Where("email = ?", email).First(&user).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		}
 		return nil, err
 	}
 
+	return &user, nil
+}
+
+func (r *repository) FindByPhoneNumber(ctx context.Context, phoneNumber string) (*User, error) {
+	var user User
+	if err := r.db.WithContext(ctx).Where("phone_number = ?", phoneNumber).First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, err
+		}
+		return nil, err
+	}
 	return &user, nil
 }
 

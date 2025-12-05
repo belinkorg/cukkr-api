@@ -42,6 +42,13 @@ func (u *usecase) Register(ctx context.Context, req *RegisterRequest) (*UserResp
 		return nil, errors.New(http.StatusConflict, "Email already registered")
 	}
 
+	// Check if phone number already exists
+	existingPhoneUser, err := u.repo.FindByPhoneNumber(ctx, req.PhoneNumber)
+	if err == nil && existingPhoneUser != nil {
+		u.logger.WithField("phone_number", req.PhoneNumber).Warn("Phone number already registered")
+		return nil, errors.New(http.StatusConflict, "Phone number already registered")
+	}
+
 	// Hash password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -159,6 +166,9 @@ func (u *usecase) UpdateProfile(ctx context.Context, userID string, req *UpdateP
 	if req.Address != "" {
 		user.Address = req.Address
 	}
+	if req.Bio != "" {
+		user.Bio = req.Bio
+	}
 
 	if err := u.repo.Update(ctx, user); err != nil {
 		u.logger.WithError(err).Error("Failed to update user profile")
@@ -231,6 +241,8 @@ func toUserResponse(u *User) *UserResponse {
 		FullName:    u.FullName,
 		PhoneNumber: u.PhoneNumber,
 		Address:     u.Address,
+		Bio:         u.Bio,
+		PhotoURL:    u.PhotoURL,
 		IsActive:    u.IsActive,
 		IsVerified:  u.IsVerified,
 		LastLoginAt: lastLogin,
