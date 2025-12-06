@@ -1,4 +1,4 @@
-package user
+package domain
 
 import (
 	"bLink-app/pkg/helper"

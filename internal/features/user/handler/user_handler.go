@@ -1,6 +1,8 @@
-package user
+package handler
 
 import (
+	"bLink-app/internal/features/user/model"
+	"bLink-app/internal/features/user/usecase"
 	"bLink-app/pkg/helper"
 	"bLink-app/pkg/response"
 	"github.com/gin-gonic/gin"
@@ -9,11 +11,11 @@ import (
 )
 
 type Handler struct {
-	usecase    Usecase
+	usecase    usecase.Usecase
 	httpHelper *helper.HTTPHandlerHelper
 }
 
-func NewHandler(usecase Usecase, httpHelper *helper.HTTPHandlerHelper) *Handler {
+func NewHandler(usecase usecase.Usecase, httpHelper *helper.HTTPHandlerHelper) *Handler {
 	return &Handler{
 		usecase:    usecase,
 		httpHelper: httpHelper,
@@ -35,7 +37,7 @@ func NewHandler(usecase Usecase, httpHelper *helper.HTTPHandlerHelper) *Handler 
 //	@Security		BearerAuth
 //	@Router			/users/register [post]
 func (h *Handler) Register(c *gin.Context) {
-	var req RegisterRequest
+	var req model.RegisterRequest
 	if err := h.httpHelper.BindAndValidate(c, &req); err != nil {
 		return
 	}
@@ -62,7 +64,7 @@ func (h *Handler) Register(c *gin.Context) {
 // @Failure 500 {object} response.Response
 // @Router /users/login [post]
 func (h *Handler) Login(c *gin.Context) {
-	var req LoginRequest
+	var req model.LoginRequest
 	if err := h.httpHelper.BindAndValidate(c, &req); err != nil {
 		return
 	}
@@ -163,7 +165,7 @@ func (h *Handler) GetAllUsers(c *gin.Context) {
 func (h *Handler) UpdateProfile(c *gin.Context) {
 	userID := c.GetString("user_id")
 
-	var req UpdateProfileRequest
+	var req model.UpdateProfileRequest
 	if err := h.httpHelper.BindAndValidate(c, &req); err != nil {
 		return
 	}
@@ -193,7 +195,7 @@ func (h *Handler) UpdateProfile(c *gin.Context) {
 func (h *Handler) ChangePassword(c *gin.Context) {
 	userID := c.GetString("user_id")
 
-	var req ChangePasswordRequest
+	var req model.ChangePasswordRequest
 	if err := h.httpHelper.BindAndValidate(c, &req); err != nil {
 		return
 	}
