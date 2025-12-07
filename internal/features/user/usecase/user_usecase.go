@@ -1,64 +1,74 @@
-package user
+package usecase
 
 import (
+	"bLink-app/internal/features/user"
+	"bLink-app/internal/features/user/domain"
+	"bLink-app/internal/features/user/model"
+	"bLink-app/internal/features/user/repository"
 	"bLink-app/pkg/errors"
-	"bLink-app/pkg/jwt"
 	"bLink-app/pkg/logger"
 	"context"
-	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"time"
 )
 
 type Usecase interface {
-	Register(ctx context.Context, req *RegisterRequest) (*UserResponse, error)
-	Login(ctx context.Context, req *LoginRequest) (*LoginResponse, error)
-	GetProfile(ctx context.Context, userID string) (*UserResponse, error)
-	GetAllUsers(ctx context.Context, limit, offset int) ([]UserResponse, int64, error)
-	UpdateProfile(ctx context.Context, userID string, req *UpdateProfileRequest) (*UserResponse, error)
-	ChangePassword(ctx context.Context, userID string, req *ChangePasswordRequest) error
+	Register(ctx context.Context, req *model.RegisterRequest) (*model.UserResponse, error)
+	Login(ctx context.Context, req *model.LoginRequest) (*model.LoginResponse, error)
+	GetProfile(ctx context.Context, userID string) (*model.UserResponse, error)
+	GetAllUsers(ctx context.Context, limit, offset int) ([]model.UserResponse, int64, error)
+	UpdateProfile(ctx context.Context, userID string, req *model.UpdateProfileRequest) (*model.UserResponse, error)
+	ChangePassword(ctx context.Context, userID string, req *model.ChangePasswordRequest) error
 	DeleteAccount(ctx context.Context, userID string) error
+	SendOTPVerification(ctx context.Context, email string) error
+	VerifyOTP(ctx context.Context, userID, otpCode string) (*model.UserResponse, error)
 }
 
 type usecase struct {
-	repo       Repository
-	jwtService *jwt.JWTService
-	logger     *logger.Logger
+	repo         repository.Repository
+	authUsecase  user.AuthUsecase
+	otpUsecase   user.OTPUsecase
+	emailUsecase user.EmailUsecase
+	logger       *logger.Logger
 }
 
-func NewUsecase(repo Repository, jwtService *jwt.JWTService, logger *logger.Logger) Usecase {
+func NewUsecase(
+	repo repository.Repository,
+	authService user.AuthUsecase,
+	otpService user.OTPUsecase,
+	emailService user.EmailUsecase,
+	logger *logger.Logger,
+) Usecase {
 	return &usecase{
-		repo:       repo,
-		jwtService: jwtService,
-		logger:     logger,
+		repo:         repo,
+		authUsecase:  authService,
+		otpUsecase:   otpService,
+		emailUsecase: emailService,
+		logger:       logger,
 	}
 }
 
-func (u *usecase) Register(ctx context.Context, req *RegisterRequest) (*UserResponse, error) {
-	// Check if email already exists
+func (u *usecase) Register(ctx context.Context, req *model.RegisterRequest) (*model.UserResponse, error) {
 	existingUser, err := u.repo.FindByEmail(ctx, req.Email)
 	if err == nil && existingUser != nil {
 		u.logger.WithField("email", req.Email).Warn("Email already registered")
 		return nil, errors.New(http.StatusConflict, "Email already registered")
 	}
 
-	// Check if phone number already exists
 	existingPhoneUser, err := u.repo.FindByPhoneNumber(ctx, req.PhoneNumber)
 	if err == nil && existingPhoneUser != nil {
 		u.logger.WithField("phone_number", req.PhoneNumber).Warn("Phone number already registered")
 		return nil, errors.New(http.StatusConflict, "Phone number already registered")
 	}
 
-	// Hash password
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	hashedPassword, err := u.authUsecase.HashPassword(req.Password)
 	if err != nil {
-		u.logger.WithError(err).Error("Failed to hash password")
-		return nil, errors.New(http.StatusInternalServerError, "Internal server error")
+		return nil, err
 	}
 
-	user := &User{
+	user := &domain.User{
 		Email:       req.Email,
-		Password:    string(hashedPassword),
+		Password:    hashedPassword,
 		FullName:    req.FullName,
 		PhoneNumber: req.PhoneNumber,
 		IsActive:    true,
@@ -78,34 +88,28 @@ func (u *usecase) Register(ctx context.Context, req *RegisterRequest) (*UserResp
 	return toUserResponse(user), nil
 }
 
-func (u *usecase) Login(ctx context.Context, req *LoginRequest) (*LoginResponse, error) {
-	// Find user by email
+func (u *usecase) Login(ctx context.Context, req *model.LoginRequest) (*model.LoginResponse, error) {
 	user, err := u.repo.FindByEmail(ctx, req.Email)
 	if err != nil {
 		u.logger.WithField("email", req.Email).Warn("Email not found")
 		return nil, errors.New(http.StatusUnauthorized, "Email not found")
 	}
 
-	// Check if user is active
 	if !user.IsActive {
 		u.logger.WithField("user_id", user.ID).Warn("Login attempt for inactive user")
 		return nil, errors.New(http.StatusForbidden, "User is inactive")
 	}
 
-	// Verify password
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+	if err := u.authUsecase.VerifyPassword(user.Password, req.Password); err != nil {
 		u.logger.WithField("user_id", user.ID).Warn("Invalid password")
 		return nil, errors.New(http.StatusUnauthorized, "Invalid email or password")
 	}
 
-	// Generate JWT token
-	token, err := u.jwtService.GenerateToken(user.ID, user.Email) // We'll use email instead of numeric ID
+	token, err := u.authUsecase.GenerateToken(user.ID, user.Email)
 	if err != nil {
-		u.logger.WithError(err).Error("Failed to generate token")
 		return nil, err
 	}
 
-	// Update last login
 	if err := u.repo.UpdateLastLogin(ctx, user.ID); err != nil {
 		u.logger.WithFields(map[string]interface{}{
 			"error":   err.Error(),
@@ -115,13 +119,48 @@ func (u *usecase) Login(ctx context.Context, req *LoginRequest) (*LoginResponse,
 
 	u.logger.WithField("user_id", user.ID).Info("User logged in successfully")
 
-	return &LoginResponse{
+	return &model.LoginResponse{
 		Token: token,
 		User:  *toUserResponse(user),
 	}, nil
 }
 
-func (u *usecase) GetProfile(ctx context.Context, userID string) (*UserResponse, error) {
+func (u *usecase) SendOTPVerification(ctx context.Context, email string) error {
+	user, err := u.repo.FindByEmail(ctx, email)
+	if err != nil {
+		u.logger.WithField("email", email).Warn("User not found for OTP")
+		return errors.New(http.StatusNotFound, "User not found")
+	}
+
+	if user.IsVerified {
+		return errors.New(http.StatusConflict, "User already verified")
+	}
+
+	return u.otpUsecase.GenerateAndSendOTP(ctx, user.ID, email)
+}
+
+func (u *usecase) VerifyOTP(ctx context.Context, userID, otpCode string) (*model.UserResponse, error) {
+	if err := u.otpUsecase.VerifyOTP(ctx, userID, otpCode); err != nil {
+		return nil, err
+	}
+
+	user, err := u.repo.FindByID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	user.IsVerified = true
+	if err := u.repo.Update(ctx, user); err != nil {
+		u.logger.WithError(err).Error("Failed to update user verification")
+		return nil, err
+	}
+
+	u.logger.WithField("user_id", userID).Info("User email verified successfully")
+
+	return toUserResponse(user), nil
+}
+
+func (u *usecase) GetProfile(ctx context.Context, userID string) (*model.UserResponse, error) {
 	user, err := u.repo.FindByID(ctx, userID)
 	if err != nil {
 		u.logger.WithFields(map[string]interface{}{
@@ -134,7 +173,7 @@ func (u *usecase) GetProfile(ctx context.Context, userID string) (*UserResponse,
 	return toUserResponse(user), nil
 }
 
-func (u *usecase) GetAllUsers(ctx context.Context, limit, offset int) ([]UserResponse, int64, error) {
+func (u *usecase) GetAllUsers(ctx context.Context, limit, offset int) ([]model.UserResponse, int64, error) {
 	users, err := u.repo.FindAll(ctx, limit, offset)
 	if err != nil {
 		u.logger.WithError(err).Error("Failed to get all users")
@@ -150,13 +189,12 @@ func (u *usecase) GetAllUsers(ctx context.Context, limit, offset int) ([]UserRes
 	return toUserResponses(users), total, nil
 }
 
-func (u *usecase) UpdateProfile(ctx context.Context, userID string, req *UpdateProfileRequest) (*UserResponse, error) {
+func (u *usecase) UpdateProfile(ctx context.Context, userID string, req *model.UpdateProfileRequest) (*model.UserResponse, error) {
 	user, err := u.repo.FindByID(ctx, userID)
 	if err != nil {
 		return nil, errors.New(http.StatusNotFound, "User not found")
 	}
 
-	// Update fields
 	if req.FullName != "" {
 		user.FullName = req.FullName
 	}
@@ -182,26 +220,23 @@ func (u *usecase) UpdateProfile(ctx context.Context, userID string, req *UpdateP
 	return toUserResponse(user), nil
 }
 
-func (u *usecase) ChangePassword(ctx context.Context, userID string, req *ChangePasswordRequest) error {
+func (u *usecase) ChangePassword(ctx context.Context, userID string, req *model.ChangePasswordRequest) error {
 	user, err := u.repo.FindByID(ctx, userID)
 	if err != nil {
 		return errors.New(http.StatusNotFound, "User not found")
 	}
 
-	// Verify old password
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.OldPassword)); err != nil {
+	if err := u.authUsecase.VerifyPassword(user.Password, req.OldPassword); err != nil {
 		u.logger.WithField("user_id", userID).Warn("Change password attempt with wrong old password")
 		return errors.New(http.StatusBadRequest, "Wrong old password")
 	}
 
-	// Hash new password
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
+	hashedPassword, err := u.authUsecase.HashPassword(req.NewPassword)
 	if err != nil {
-		u.logger.WithError(err).Error("Failed to hash new password")
-		return errors.New(http.StatusInternalServerError, "Internal server error")
+		return err
 	}
 
-	user.Password = string(hashedPassword)
+	user.Password = hashedPassword
 
 	if err := u.repo.Update(ctx, user); err != nil {
 		u.logger.WithError(err).Error("Failed to update password")
@@ -228,14 +263,14 @@ func (u *usecase) DeleteAccount(ctx context.Context, userID string) error {
 	return nil
 }
 
-func toUserResponse(u *User) *UserResponse {
+func toUserResponse(u *domain.User) *model.UserResponse {
 	var lastLogin *string
 	if u.LastLoginAt != nil {
 		lastLoginStr := u.LastLoginAt.Format(time.RFC3339)
 		lastLogin = &lastLoginStr
 	}
 
-	return &UserResponse{
+	return &model.UserResponse{
 		ID:          u.ID,
 		Email:       u.Email,
 		FullName:    u.FullName,
@@ -251,8 +286,8 @@ func toUserResponse(u *User) *UserResponse {
 	}
 }
 
-func toUserResponses(users []User) []UserResponse {
-	responses := make([]UserResponse, len(users))
+func toUserResponses(users []domain.User) []model.UserResponse {
+	responses := make([]model.UserResponse, len(users))
 	for i, u := range users {
 		responses[i] = *toUserResponse(&u)
 	}

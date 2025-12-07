@@ -1306,6 +1306,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "Jl. Sudirman No. 123"
                 },
+                "bio": {
+                    "type": "string",
+                    "example": "This is my bio."
+                },
                 "full_name": {
                     "type": "string",
                     "maxLength": 255,
@@ -1326,6 +1330,10 @@ const docTemplate = `{
                 "address": {
                     "type": "string",
                     "example": "Jl. Sudirman No. 123"
+                },
+                "bio": {
+                    "type": "string",
+                    "example": "This is my bio."
                 },
                 "created_at": {
                     "type": "string",
@@ -1358,6 +1366,10 @@ const docTemplate = `{
                 "phone_number": {
                     "type": "string",
                     "example": "+628123456789"
+                },
+                "photo_url": {
+                    "type": "string",
+                    "example": "https://example.com/photos/johndoe.jpg"
                 },
                 "updated_at": {
                     "type": "string",

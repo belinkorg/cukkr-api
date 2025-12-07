@@ -1,13 +1,14 @@
-package user
+package routes
 
 import (
+	"bLink-app/internal/features/user/handler"
 	"bLink-app/internal/middleware"
 	"bLink-app/pkg/jwt"
 	"github.com/gin-gonic/gin"
 )
 
 // RegisterRoutes registers all user routes
-func RegisterRoutes(router *gin.RouterGroup, handler *Handler, jwtService *jwt.JWTService) {
+func RegisterRoutes(router *gin.RouterGroup, handler *handler.Handler, jwtService *jwt.JWTService) {
 	users := router.Group("/users")
 	{
 		// Public routes - Anyone can access

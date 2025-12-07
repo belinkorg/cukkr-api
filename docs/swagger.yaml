@@ -188,6 +188,9 @@ definitions:
       address:
         example: Jl. Sudirman No. 123
         type: string
+      bio:
+        example: This is my bio.
+        type: string
       full_name:
         example: John Doe Updated
         maxLength: 255
@@ -203,6 +206,9 @@ definitions:
     properties:
       address:
         example: Jl. Sudirman No. 123
+        type: string
+      bio:
+        example: This is my bio.
         type: string
       created_at:
         example: "2024-01-15T10:30:00Z"
@@ -227,6 +233,9 @@ definitions:
         type: string
       phone_number:
         example: "+628123456789"
+        type: string
+      photo_url:
+        example: https://example.com/photos/johndoe.jpg
         type: string
       updated_at:
         example: "2024-01-15T10:30:00Z"
