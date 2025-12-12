@@ -1,18 +1,21 @@
-package usecase
+package user
 
 import (
-	"bLink-app/internal/features/user"
 	"bLink-app/pkg/logger"
 	"fmt"
 	"gopkg.in/mail.v2"
 	"os"
 )
 
+type EmailUsecase interface {
+	SendOTPEmail(email, otp string) error
+}
+
 type emailUsecase struct {
 	logger *logger.Logger
 }
 
-func NewEmailUsecase(logger *logger.Logger) user.EmailUsecase {
+func NewEmailUsecase(logger *logger.Logger) EmailUsecase {
 	return &emailUsecase{
 		logger: logger,
 	}

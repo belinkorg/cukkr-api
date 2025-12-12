@@ -1,4 +1,4 @@
-package model
+package user
 
 type RegisterRequest struct {
 	Email       string `json:"email" validate:"required,email" example:"johndoe@example.com"`
@@ -10,6 +10,10 @@ type RegisterRequest struct {
 type LoginRequest struct {
 	Email    string `json:"email" validate:"required,email" example:"johndoe@example.com"`
 	Password string `json:"password" validate:"required" example:"password"`
+}
+
+type VerifyOTPRequest struct {
+	OTPCode string `json:"otp_code" validate:"required,len=6" example:"123456"`
 }
 
 type UpdateProfileRequest struct {

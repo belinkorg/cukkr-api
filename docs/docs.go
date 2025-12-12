@@ -643,7 +643,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/internal_features_user.UserResponse"
+                                                "$ref": "#/definitions/bLink-app_internal_features_user_model.UserResponse"
                                             }
                                         }
                                     }
@@ -737,7 +737,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_features_user.ChangePasswordRequest"
+                            "$ref": "#/definitions/bLink-app_internal_features_user_model.ChangePasswordRequest"
                         }
                     }
                 ],
@@ -789,7 +789,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_features_user.LoginRequest"
+                            "$ref": "#/definitions/bLink-app_internal_features_user_model.LoginRequest"
                         }
                     }
                 ],
@@ -805,7 +805,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/internal_features_user.LoginResponse"
+                                            "$ref": "#/definitions/bLink-app_internal_features_user_model.LoginResponse"
                                         }
                                     }
                                 }
@@ -863,7 +863,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/internal_features_user.UserResponse"
+                                            "$ref": "#/definitions/bLink-app_internal_features_user_model.UserResponse"
                                         }
                                     }
                                 }
@@ -914,7 +914,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_features_user.UpdateProfileRequest"
+                            "$ref": "#/definitions/bLink-app_internal_features_user_model.UpdateProfileRequest"
                         }
                     }
                 ],
@@ -930,7 +930,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/internal_features_user.UserResponse"
+                                            "$ref": "#/definitions/bLink-app_internal_features_user_model.UserResponse"
                                         }
                                     }
                                 }
@@ -989,7 +989,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_features_user.RegisterRequest"
+                            "$ref": "#/definitions/bLink-app_internal_features_user_model.RegisterRequest"
                         }
                     }
                 ],
@@ -1005,7 +1005,71 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/internal_features_user.UserResponse"
+                                            "$ref": "#/definitions/bLink-app_internal_features_user_model.UserResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/verify-otp": {
+            "post": {
+                "description": "Verify email OTP and activate user account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "User Verify Email OTP",
+                "parameters": [
+                    {
+                        "description": "User OTP verification data",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/bLink-app_internal_features_user_model.VerifyOTPRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/bLink-app_internal_features_user_model.UserResponse"
                                         }
                                     }
                                 }
@@ -1035,6 +1099,174 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "bLink-app_internal_features_user_model.ChangePasswordRequest": {
+            "type": "object",
+            "required": [
+                "new_password",
+                "old_password"
+            ],
+            "properties": {
+                "new_password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "NewPassword123!"
+                },
+                "old_password": {
+                    "type": "string",
+                    "example": "OldPassword123!"
+                }
+            }
+        },
+        "bLink-app_internal_features_user_model.LoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "johndoe@example.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "password"
+                }
+            }
+        },
+        "bLink-app_internal_features_user_model.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                },
+                "user": {
+                    "$ref": "#/definitions/bLink-app_internal_features_user_model.UserResponse"
+                }
+            }
+        },
+        "bLink-app_internal_features_user_model.RegisterRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "full_name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "johndoe@example.com"
+                },
+                "full_name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 3,
+                    "example": "John Doe"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "password"
+                },
+                "phone_number": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 10,
+                    "example": "+628123456789"
+                }
+            }
+        },
+        "bLink-app_internal_features_user_model.UpdateProfileRequest": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "example": "Jl. Sudirman No. 123"
+                },
+                "bio": {
+                    "type": "string",
+                    "example": "This is my bio."
+                },
+                "full_name": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 3,
+                    "example": "John Doe Updated"
+                },
+                "phone_number": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 10,
+                    "example": "+628123456789"
+                }
+            }
+        },
+        "bLink-app_internal_features_user_model.UserResponse": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "example": "Jl. Sudirman No. 123"
+                },
+                "bio": {
+                    "type": "string",
+                    "example": "This is my bio."
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2024-01-15T10:30:00Z"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "john.doe@example.com"
+                },
+                "full_name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                },
+                "is_active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "is_verified": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "last_login_at": {
+                    "type": "string",
+                    "example": "2024-01-15T10:30:00Z"
+                },
+                "phone_number": {
+                    "type": "string",
+                    "example": "+628123456789"
+                },
+                "photo_url": {
+                    "type": "string",
+                    "example": "https://example.com/photos/johndoe.jpg"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2024-01-15T10:30:00Z"
+                }
+            }
+        },
+        "bLink-app_internal_features_user_model.VerifyOTPRequest": {
+            "type": "object",
+            "required": [
+                "otp_code"
+            ],
+            "properties": {
+                "otp_code": {
+                    "type": "string",
+                    "example": "123456"
+                }
+            }
+        },
         "bLink-app_pkg_response.Response": {
             "type": "object",
             "properties": {
@@ -1218,162 +1450,6 @@ const docTemplate = `{
                 "stock": {
                     "type": "integer",
                     "minimum": 0
-                }
-            }
-        },
-        "internal_features_user.ChangePasswordRequest": {
-            "type": "object",
-            "required": [
-                "new_password",
-                "old_password"
-            ],
-            "properties": {
-                "new_password": {
-                    "type": "string",
-                    "minLength": 8,
-                    "example": "NewPassword123!"
-                },
-                "old_password": {
-                    "type": "string",
-                    "example": "OldPassword123!"
-                }
-            }
-        },
-        "internal_features_user.LoginRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "johndoe@example.com"
-                },
-                "password": {
-                    "type": "string",
-                    "example": "password"
-                }
-            }
-        },
-        "internal_features_user.LoginResponse": {
-            "type": "object",
-            "properties": {
-                "token": {
-                    "type": "string",
-                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                },
-                "user": {
-                    "$ref": "#/definitions/internal_features_user.UserResponse"
-                }
-            }
-        },
-        "internal_features_user.RegisterRequest": {
-            "type": "object",
-            "required": [
-                "email",
-                "full_name",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "johndoe@example.com"
-                },
-                "full_name": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 3,
-                    "example": "John Doe"
-                },
-                "password": {
-                    "type": "string",
-                    "minLength": 8,
-                    "example": "password"
-                },
-                "phone_number": {
-                    "type": "string",
-                    "maxLength": 20,
-                    "minLength": 10,
-                    "example": "+628123456789"
-                }
-            }
-        },
-        "internal_features_user.UpdateProfileRequest": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string",
-                    "example": "Jl. Sudirman No. 123"
-                },
-                "bio": {
-                    "type": "string",
-                    "example": "This is my bio."
-                },
-                "full_name": {
-                    "type": "string",
-                    "maxLength": 255,
-                    "minLength": 3,
-                    "example": "John Doe Updated"
-                },
-                "phone_number": {
-                    "type": "string",
-                    "maxLength": 20,
-                    "minLength": 10,
-                    "example": "+628123456789"
-                }
-            }
-        },
-        "internal_features_user.UserResponse": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string",
-                    "example": "Jl. Sudirman No. 123"
-                },
-                "bio": {
-                    "type": "string",
-                    "example": "This is my bio."
-                },
-                "created_at": {
-                    "type": "string",
-                    "example": "2024-01-15T10:30:00Z"
-                },
-                "email": {
-                    "type": "string",
-                    "example": "john.doe@example.com"
-                },
-                "full_name": {
-                    "type": "string",
-                    "example": "John Doe"
-                },
-                "id": {
-                    "type": "string",
-                    "example": "550e8400-e29b-41d4-a716-446655440000"
-                },
-                "is_active": {
-                    "type": "boolean",
-                    "example": true
-                },
-                "is_verified": {
-                    "type": "boolean",
-                    "example": false
-                },
-                "last_login_at": {
-                    "type": "string",
-                    "example": "2024-01-15T10:30:00Z"
-                },
-                "phone_number": {
-                    "type": "string",
-                    "example": "+628123456789"
-                },
-                "photo_url": {
-                    "type": "string",
-                    "example": "https://example.com/photos/johndoe.jpg"
-                },
-                "updated_at": {
-                    "type": "string",
-                    "example": "2024-01-15T10:30:00Z"
                 }
             }
         }

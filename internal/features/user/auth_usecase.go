@@ -1,7 +1,6 @@
-package usecase
+package user
 
 import (
-	"bLink-app/internal/features/user"
 	"bLink-app/pkg/errors"
 	"bLink-app/pkg/jwt"
 	"bLink-app/pkg/logger"
@@ -9,12 +8,18 @@ import (
 	"net/http"
 )
 
+type AuthUsecase interface {
+	HashPassword(password string) (string, error)
+	VerifyPassword(hashedPassword, password string) error
+	GenerateToken(userID, email string) (string, error)
+}
+
 type authUsecase struct {
 	jwtService *jwt.JWTService
 	logger     *logger.Logger
 }
 
-func NewAuthUsecase(jwtService *jwt.JWTService, logger *logger.Logger) user.AuthUsecase {
+func NewAuthUsecase(jwtService *jwt.JWTService, logger *logger.Logger) AuthUsecase {
 	return &authUsecase{
 		jwtService: jwtService,
 		logger:     logger,

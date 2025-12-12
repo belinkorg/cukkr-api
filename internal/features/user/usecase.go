@@ -1,10 +1,6 @@
-package usecase
+package user
 
 import (
-	"bLink-app/internal/features/user"
-	"bLink-app/internal/features/user/domain"
-	"bLink-app/internal/features/user/model"
-	"bLink-app/internal/features/user/repository"
 	"bLink-app/pkg/errors"
 	"bLink-app/pkg/logger"
 	"context"
@@ -12,33 +8,33 @@ import (
 	"time"
 )
 
-type Usecase interface {
-	Register(ctx context.Context, req *model.RegisterRequest) (*model.UserResponse, error)
-	Login(ctx context.Context, req *model.LoginRequest) (*model.LoginResponse, error)
-	GetProfile(ctx context.Context, userID string) (*model.UserResponse, error)
-	GetAllUsers(ctx context.Context, limit, offset int) ([]model.UserResponse, int64, error)
-	UpdateProfile(ctx context.Context, userID string, req *model.UpdateProfileRequest) (*model.UserResponse, error)
-	ChangePassword(ctx context.Context, userID string, req *model.ChangePasswordRequest) error
+type UserUsecase interface {
+	Register(ctx context.Context, req *RegisterRequest) error
+	Login(ctx context.Context, req *LoginRequest) (*LoginResponse, error)
+	GetProfile(ctx context.Context, userID string) (*UserResponse, error)
+	GetAllUsers(ctx context.Context, limit, offset int) ([]UserResponse, int64, error)
+	UpdateProfile(ctx context.Context, userID string, req *UpdateProfileRequest) (*UserResponse, error)
+	ChangePassword(ctx context.Context, userID string, req *ChangePasswordRequest) error
 	DeleteAccount(ctx context.Context, userID string) error
 	SendOTPVerification(ctx context.Context, email string) error
-	VerifyOTP(ctx context.Context, userID, otpCode string) (*model.UserResponse, error)
+	VerifyOTP(ctx context.Context, userID string, req *VerifyOTPRequest) (*UserResponse, error)
 }
 
 type usecase struct {
-	repo         repository.Repository
-	authUsecase  user.AuthUsecase
-	otpUsecase   user.OTPUsecase
-	emailUsecase user.EmailUsecase
+	repo         UserRepository
+	authUsecase  AuthUsecase
+	otpUsecase   OTPUsecase
+	emailUsecase EmailUsecase
 	logger       *logger.Logger
 }
 
-func NewUsecase(
-	repo repository.Repository,
-	authService user.AuthUsecase,
-	otpService user.OTPUsecase,
-	emailService user.EmailUsecase,
+func NewUserUsecase(
+	repo UserRepository,
+	authService AuthUsecase,
+	otpService OTPUsecase,
+	emailService EmailUsecase,
 	logger *logger.Logger,
-) Usecase {
+) UserUsecase {
 	return &usecase{
 		repo:         repo,
 		authUsecase:  authService,
@@ -48,25 +44,25 @@ func NewUsecase(
 	}
 }
 
-func (u *usecase) Register(ctx context.Context, req *model.RegisterRequest) (*model.UserResponse, error) {
+func (u *usecase) Register(ctx context.Context, req *RegisterRequest) error {
 	existingUser, err := u.repo.FindByEmail(ctx, req.Email)
 	if err == nil && existingUser != nil {
 		u.logger.WithField("email", req.Email).Warn("Email already registered")
-		return nil, errors.New(http.StatusConflict, "Email already registered")
+		return errors.New(http.StatusConflict, "Email already registered")
 	}
 
 	existingPhoneUser, err := u.repo.FindByPhoneNumber(ctx, req.PhoneNumber)
 	if err == nil && existingPhoneUser != nil {
 		u.logger.WithField("phone_number", req.PhoneNumber).Warn("Phone number already registered")
-		return nil, errors.New(http.StatusConflict, "Phone number already registered")
+		return errors.New(http.StatusConflict, "Phone number already registered")
 	}
 
 	hashedPassword, err := u.authUsecase.HashPassword(req.Password)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	user := &domain.User{
+	user := &User{
 		Email:       req.Email,
 		Password:    hashedPassword,
 		FullName:    req.FullName,
@@ -75,20 +71,23 @@ func (u *usecase) Register(ctx context.Context, req *model.RegisterRequest) (*mo
 		IsVerified:  false,
 	}
 
-	if err := u.repo.Create(ctx, user); err != nil {
-		u.logger.WithError(err).Error("Failed to create user")
-		return nil, errors.New(http.StatusInternalServerError, "Internal server error")
+	// Save to Redis for a while (TTL 10 minutes)
+	if err := u.repo.SavePendingUser(ctx, user, 10*time.Minute); err != nil {
+		u.logger.WithError(err).Error("Failed to save pending user to Redis")
+		return errors.New(http.StatusInternalServerError, "Registration failed")
 	}
 
-	u.logger.WithFields(map[string]interface{}{
-		"user_id": user.ID,
-		"email":   user.Email,
-	}).Info("User registered successfully")
+	// Generate and send OTP
+	if err := u.otpUsecase.GenerateAndSendOTP(ctx, user.ID, user.Email); err != nil {
+		u.logger.WithError(err).Error("Failed to send OTP")
+		return errors.New(http.StatusInternalServerError, "Failed to send OTP verification")
+	}
 
-	return toUserResponse(user), nil
+	u.logger.WithField("email", user.Email).Info("User registered, pending OTP verification")
+	return nil
 }
 
-func (u *usecase) Login(ctx context.Context, req *model.LoginRequest) (*model.LoginResponse, error) {
+func (u *usecase) Login(ctx context.Context, req *LoginRequest) (*LoginResponse, error) {
 	user, err := u.repo.FindByEmail(ctx, req.Email)
 	if err != nil {
 		u.logger.WithField("email", req.Email).Warn("Email not found")
@@ -119,7 +118,7 @@ func (u *usecase) Login(ctx context.Context, req *model.LoginRequest) (*model.Lo
 
 	u.logger.WithField("user_id", user.ID).Info("User logged in successfully")
 
-	return &model.LoginResponse{
+	return &LoginResponse{
 		Token: token,
 		User:  *toUserResponse(user),
 	}, nil
@@ -139,28 +138,35 @@ func (u *usecase) SendOTPVerification(ctx context.Context, email string) error {
 	return u.otpUsecase.GenerateAndSendOTP(ctx, user.ID, email)
 }
 
-func (u *usecase) VerifyOTP(ctx context.Context, userID, otpCode string) (*model.UserResponse, error) {
-	if err := u.otpUsecase.VerifyOTP(ctx, userID, otpCode); err != nil {
+func (u *usecase) VerifyOTP(ctx context.Context, userID string, req *VerifyOTPRequest) (*UserResponse, error) {
+	if err := u.otpUsecase.VerifyOTP(ctx, userID, req); err != nil {
 		return nil, err
 	}
 
-	user, err := u.repo.FindByID(ctx, userID)
+	// Get user from Redis
+	user, err := u.repo.GetPendingUser(ctx, userID)
 	if err != nil {
-		return nil, err
+		u.logger.WithField("user_id", userID).Error("Pending user not found in Redis")
+		return nil, errors.New(http.StatusNotFound, "Registration session expired")
 	}
 
+	// Save ke DB
 	user.IsVerified = true
-	if err := u.repo.Update(ctx, user); err != nil {
-		u.logger.WithError(err).Error("Failed to update user verification")
-		return nil, err
+	if err := u.repo.Create(ctx, user); err != nil {
+		u.logger.WithError(err).Error("Failed to create verified user")
+		return nil, errors.New(http.StatusInternalServerError, "Failed to complete registration")
 	}
 
-	u.logger.WithField("user_id", userID).Info("User email verified successfully")
+	// Hapus dari Redis
+	if err := u.repo.DeletePendingUser(ctx, userID); err != nil {
+		u.logger.WithError(err).Warn("Failed to delete pending user from Redis")
+	}
 
+	u.logger.WithField("user_id", userID).Info("User email verified and registered successfully")
 	return toUserResponse(user), nil
 }
 
-func (u *usecase) GetProfile(ctx context.Context, userID string) (*model.UserResponse, error) {
+func (u *usecase) GetProfile(ctx context.Context, userID string) (*UserResponse, error) {
 	user, err := u.repo.FindByID(ctx, userID)
 	if err != nil {
 		u.logger.WithFields(map[string]interface{}{
@@ -173,7 +179,7 @@ func (u *usecase) GetProfile(ctx context.Context, userID string) (*model.UserRes
 	return toUserResponse(user), nil
 }
 
-func (u *usecase) GetAllUsers(ctx context.Context, limit, offset int) ([]model.UserResponse, int64, error) {
+func (u *usecase) GetAllUsers(ctx context.Context, limit, offset int) ([]UserResponse, int64, error) {
 	users, err := u.repo.FindAll(ctx, limit, offset)
 	if err != nil {
 		u.logger.WithError(err).Error("Failed to get all users")
@@ -189,7 +195,7 @@ func (u *usecase) GetAllUsers(ctx context.Context, limit, offset int) ([]model.U
 	return toUserResponses(users), total, nil
 }
 
-func (u *usecase) UpdateProfile(ctx context.Context, userID string, req *model.UpdateProfileRequest) (*model.UserResponse, error) {
+func (u *usecase) UpdateProfile(ctx context.Context, userID string, req *UpdateProfileRequest) (*UserResponse, error) {
 	user, err := u.repo.FindByID(ctx, userID)
 	if err != nil {
 		return nil, errors.New(http.StatusNotFound, "User not found")
@@ -220,7 +226,7 @@ func (u *usecase) UpdateProfile(ctx context.Context, userID string, req *model.U
 	return toUserResponse(user), nil
 }
 
-func (u *usecase) ChangePassword(ctx context.Context, userID string, req *model.ChangePasswordRequest) error {
+func (u *usecase) ChangePassword(ctx context.Context, userID string, req *ChangePasswordRequest) error {
 	user, err := u.repo.FindByID(ctx, userID)
 	if err != nil {
 		return errors.New(http.StatusNotFound, "User not found")
@@ -263,14 +269,14 @@ func (u *usecase) DeleteAccount(ctx context.Context, userID string) error {
 	return nil
 }
 
-func toUserResponse(u *domain.User) *model.UserResponse {
+func toUserResponse(u *User) *UserResponse {
 	var lastLogin *string
 	if u.LastLoginAt != nil {
 		lastLoginStr := u.LastLoginAt.Format(time.RFC3339)
 		lastLogin = &lastLoginStr
 	}
 
-	return &model.UserResponse{
+	return &UserResponse{
 		ID:          u.ID,
 		Email:       u.Email,
 		FullName:    u.FullName,
@@ -286,8 +292,8 @@ func toUserResponse(u *domain.User) *model.UserResponse {
 	}
 }
 
-func toUserResponses(users []domain.User) []model.UserResponse {
-	responses := make([]model.UserResponse, len(users))
+func toUserResponses(users []User) []UserResponse {
+	responses := make([]UserResponse, len(users))
 	for i, u := range users {
 		responses[i] = *toUserResponse(&u)
 	}

@@ -5,9 +5,7 @@ import (
 	"bLink-app/internal/database"
 	"bLink-app/internal/features/order"
 	"bLink-app/internal/features/product"
-	"bLink-app/internal/features/user/handler"
-	"bLink-app/internal/features/user/repository"
-	"bLink-app/internal/features/user/usecase"
+	"bLink-app/internal/features/user"
 	"bLink-app/internal/router"
 	"bLink-app/pkg/helper"
 	"bLink-app/pkg/jwt"
@@ -93,12 +91,12 @@ func main() {
 	orderHandler := order.NewHandler(orderUsecase, httpHelper)
 
 	// Initialize User feature
-	userRepo := repository.NewRepository(db, redisClient)
-	emailUsecase := usecase.NewEmailUsecase(appLogger)
-	authUsecase := usecase.NewAuthUsecase(jwtService, appLogger)
-	otpUsecase := usecase.NewOTPUsecase(userRepo, appLogger, emailUsecase)
-	userUsecase := usecase.NewUsecase(userRepo, authUsecase, otpUsecase, emailUsecase, appLogger)
-	userHandler := handler.NewHandler(userUsecase, httpHelper)
+	userRepo := user.NewRepository(db, redisClient)
+	emailUsecase := user.NewEmailUsecase(appLogger)
+	authUsecase := user.NewAuthUsecase(jwtService, appLogger)
+	otpUsecase := user.NewOTPUsecase(userRepo, appLogger, emailUsecase)
+	userUsecase := user.NewUserUsecase(userRepo, authUsecase, otpUsecase, emailUsecase, appLogger)
+	userHandler := user.NewHandler(userUsecase, httpHelper)
 
 	// Setup router
 	r := router.NewRouter(productHandler, orderHandler, userHandler, jwtService, appLogger)
