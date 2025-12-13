@@ -3,6 +3,8 @@ package product_test
 import (
 	"bLink-app/internal/features/product"
 	_ "bLink-app/pkg/errors"
+	"bLink-app/pkg/helper"
+	"bLink-app/pkg/logger"
 	"bLink-app/pkg/validator"
 	"bLink-app/tests/mocks"
 	"bytes"
@@ -23,7 +25,11 @@ func setupTestRouter() *gin.Engine {
 func TestHandler_CreateProduct_Success(t *testing.T) {
 	mockUsecase := new(mocks.ProductUsecaseMock)
 	v := validator.NewValidator()
-	handler := product.NewHandlers(mockUsecase, v)
+	log := logger.NewLogger("info")
+
+	h := helper.NewHTTPHandlerHelper(v, log)
+
+	handler := product.NewHandlers(mockUsecase, h)
 	router := setupTestRouter()
 	router.POST("/products", handler.CreateProduct)
 

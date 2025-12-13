@@ -1,19 +1,19 @@
-package routes
+package user
 
 import (
-	"bLink-app/internal/features/user/handler"
 	"bLink-app/internal/middleware"
 	"bLink-app/pkg/jwt"
 	"github.com/gin-gonic/gin"
 )
 
 // RegisterRoutes registers all user routes
-func RegisterRoutes(router *gin.RouterGroup, handler *handler.Handler, jwtService *jwt.JWTService) {
+func RegisterRoutes(router *gin.RouterGroup, handler *Handler, jwtService *jwt.JWTService) {
 	users := router.Group("/users")
 	{
 		// Public routes - Anyone can access
 		users.POST("/register", handler.Register)
 		users.POST("/login", handler.Login)
+		users.POST("/verify-otp", handler.VerifyEmailOTP)
 
 		// Protected routes - Require authentication
 		protected := users.Group("")

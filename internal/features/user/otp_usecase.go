@@ -1,8 +1,6 @@
-package usecase
+package user
 
 import (
-	"bLink-app/internal/features/user"
-	"bLink-app/internal/features/user/repository"
 	"bLink-app/pkg/errors"
 	"bLink-app/pkg/logger"
 	"context"
@@ -12,13 +10,18 @@ import (
 	"time"
 )
 
-type otpUsecase struct {
-	repo         repository.Repository
-	logger       *logger.Logger
-	emailUsecase user.EmailUsecase
+type OTPUsecase interface {
+	GenerateAndSendOTP(ctx context.Context, userID string, email string) error
+	VerifyOTP(ctx context.Context, userID string, req *VerifyOTPRequest) error
 }
 
-func NewOTPUsecase(repo repository.Repository, logger *logger.Logger, emailUsecase user.EmailUsecase) user.OTPUsecase {
+type otpUsecase struct {
+	repo         UserRepository
+	logger       *logger.Logger
+	emailUsecase EmailUsecase
+}
+
+func NewOTPUsecase(repo UserRepository, logger *logger.Logger, emailUsecase EmailUsecase) OTPUsecase {
 	return &otpUsecase{
 		repo:         repo,
 		logger:       logger,
@@ -52,7 +55,7 @@ func (o *otpUsecase) GenerateAndSendOTP(ctx context.Context, userID string, emai
 	return nil
 }
 
-func (o *otpUsecase) VerifyOTP(ctx context.Context, userID, otpCode string) error {
+func (o *otpUsecase) VerifyOTP(ctx context.Context, userID string, req *VerifyOTPRequest) error {
 	storedOTP, err := o.repo.GetOTPFromRedis(ctx, userID)
 	if err != nil {
 		o.logger.WithError(err).Error("Failed to get OTP from Redis")
@@ -63,7 +66,7 @@ func (o *otpUsecase) VerifyOTP(ctx context.Context, userID, otpCode string) erro
 		return errors.New(http.StatusBadRequest, "OTP expired or not found")
 	}
 
-	if storedOTP != otpCode {
+	if storedOTP != req.OTPCode {
 		return errors.New(http.StatusBadRequest, "Invalid OTP")
 	}
 

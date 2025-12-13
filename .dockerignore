@@ -1,0 +1,53 @@
+# Git
+.git
+.gitignore
+.github
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Testing
+coverage.out
+coverage.html
+*.test
+
+# Build artifacts
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Temporary files
+tmp/
+temp/
+
+# Documentation
+*.md
+!README.md
+
+# Docker files
+docker-compose*.yml
+.dockerignore
+
+# Database
+*.db
+*.sqlite
+
+# macOS
+.DS_Store
+
+# Node modules (jika ada frontend)
+node_modules/

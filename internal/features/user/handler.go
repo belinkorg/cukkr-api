@@ -1,8 +1,6 @@
-package handler
+package user
 
 import (
-	"bLink-app/internal/features/user/model"
-	"bLink-app/internal/features/user/usecase"
 	"bLink-app/pkg/helper"
 	"bLink-app/pkg/response"
 	"github.com/gin-gonic/gin"
@@ -11,11 +9,11 @@ import (
 )
 
 type Handler struct {
-	usecase    usecase.Usecase
+	usecase    UserUsecase
 	httpHelper *helper.HTTPHandlerHelper
 }
 
-func NewHandler(usecase usecase.Usecase, httpHelper *helper.HTTPHandlerHelper) *Handler {
+func NewHandler(usecase UserUsecase, httpHelper *helper.HTTPHandlerHelper) *Handler {
 	return &Handler{
 		usecase:    usecase,
 		httpHelper: httpHelper,
@@ -37,18 +35,18 @@ func NewHandler(usecase usecase.Usecase, httpHelper *helper.HTTPHandlerHelper) *
 //	@Security		BearerAuth
 //	@Router			/users/register [post]
 func (h *Handler) Register(c *gin.Context) {
-	var req model.RegisterRequest
+	var req RegisterRequest
 	if err := h.httpHelper.BindAndValidate(c, &req); err != nil {
 		return
 	}
 
-	result, err := h.usecase.Register(c.Request.Context(), &req)
+	err := h.usecase.Register(c.Request.Context(), &req)
 	if err != nil {
 		h.httpHelper.HandleError(c, err, "Failed to register user")
 		return
 	}
 
-	response.Success(c, http.StatusCreated, "User registered successfully", result)
+	response.Success(c, http.StatusCreated, "User registered successfully, please verify OTP sent to your email", nil)
 }
 
 // Login godoc
@@ -64,7 +62,7 @@ func (h *Handler) Register(c *gin.Context) {
 // @Failure 500 {object} response.Response
 // @Router /users/login [post]
 func (h *Handler) Login(c *gin.Context) {
-	var req model.LoginRequest
+	var req LoginRequest
 	if err := h.httpHelper.BindAndValidate(c, &req); err != nil {
 		return
 	}
@@ -76,6 +74,34 @@ func (h *Handler) Login(c *gin.Context) {
 	}
 
 	response.Success(c, http.StatusOK, "Login successful", result)
+}
+
+// VerifyEmailOTP godoc
+// @Summary User Verify Email OTP
+// @Description Verify email OTP and activate user account
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param	user body	VerifyOTPRequest true "User OTP verification data"
+// @Success 200 {object} response.Response{data=UserResponse}
+// @Failure 400 {object} response.Response
+// @Failure 401 {object} response.Response
+// @Failure 500 {object} response.Response
+// @Router /users/verify-otp [post]
+func (h *Handler) VerifyEmailOTP(c *gin.Context) {
+	var req VerifyOTPRequest
+	userID := c.GetString("user_id")
+	if err := h.httpHelper.BindAndValidate(c, &req); err != nil {
+		return
+	}
+
+	result, err := h.usecase.VerifyOTP(c.Request.Context(), userID, &req)
+	if err != nil {
+		h.httpHelper.HandleError(c, err, "Failed to verify otp")
+		return
+	}
+
+	response.Success(c, http.StatusOK, "Verify OTP successful", result)
 }
 
 // GetProfile godoc
@@ -165,7 +191,7 @@ func (h *Handler) GetAllUsers(c *gin.Context) {
 func (h *Handler) UpdateProfile(c *gin.Context) {
 	userID := c.GetString("user_id")
 
-	var req model.UpdateProfileRequest
+	var req UpdateProfileRequest
 	if err := h.httpHelper.BindAndValidate(c, &req); err != nil {
 		return
 	}
@@ -195,7 +221,7 @@ func (h *Handler) UpdateProfile(c *gin.Context) {
 func (h *Handler) ChangePassword(c *gin.Context) {
 	userID := c.GetString("user_id")
 
-	var req model.ChangePasswordRequest
+	var req ChangePasswordRequest
 	if err := h.httpHelper.BindAndValidate(c, &req); err != nil {
 		return
 	}

@@ -20,7 +20,7 @@ func newUUID() uuid.UUID {
 }
 
 func TestCreateProduct_Success(t *testing.T) {
-	db, _ := testutil.SetupTestDB(t)
+	db, _ := testutil.SetupTestDBWithTransaction(t)
 	mockRepo := new(mocks.ProductRepositoryMock)
 	logger := testutil.GetTestLogger()
 	uc := product.NewUsecase(db, mockRepo, logger)
@@ -129,9 +129,11 @@ func TestUpdateProduct_Success(t *testing.T) {
 		Category:    "Electronics",
 	}
 
+	name := "New Name"
+	price := 150000.0
 	req := &product.UpdateProductRequest{
-		Name:  "New Name",
-		Price: 150000,
+		Name:  &name,
+		Price: &price,
 	}
 
 	mockRepo.On("FindByID", mock.Anything, existingProduct.ID).Return(existingProduct, nil)

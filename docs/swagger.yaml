@@ -241,6 +241,14 @@ definitions:
         example: "2024-01-15T10:30:00Z"
         type: string
     type: object
+  internal_features_user.VerifyOTPRequest:
+    properties:
+      otp_code:
+        example: "123456"
+        type: string
+    required:
+    - otp_code
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -864,6 +872,45 @@ paths:
       security:
       - BearerAuth: []
       summary: Register a new user
+      tags:
+      - Users
+  /users/verify-otp:
+    post:
+      consumes:
+      - application/json
+      description: Verify email OTP and activate user account
+      parameters:
+      - description: User OTP verification data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/internal_features_user.VerifyOTPRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/internal_features_user.UserResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/bLink-app_pkg_response.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/bLink-app_pkg_response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/bLink-app_pkg_response.Response'
+      summary: User Verify Email OTP
       tags:
       - Users
 securityDefinitions:

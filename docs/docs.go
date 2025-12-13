@@ -1032,6 +1032,70 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/verify-otp": {
+            "post": {
+                "description": "Verify email OTP and activate user account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "User Verify Email OTP",
+                "parameters": [
+                    {
+                        "description": "User OTP verification data",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_features_user.VerifyOTPRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/internal_features_user.UserResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1374,6 +1438,18 @@ const docTemplate = `{
                 "updated_at": {
                     "type": "string",
                     "example": "2024-01-15T10:30:00Z"
+                }
+            }
+        },
+        "internal_features_user.VerifyOTPRequest": {
+            "type": "object",
+            "required": [
+                "otp_code"
+            ],
+            "properties": {
+                "otp_code": {
+                    "type": "string",
+                    "example": "123456"
                 }
             }
         }

@@ -3,8 +3,7 @@ package router
 import (
 	"bLink-app/internal/features/order"
 	"bLink-app/internal/features/product"
-	"bLink-app/internal/features/user/handler"
-	"bLink-app/internal/features/user/routes"
+	"bLink-app/internal/features/user"
 	"bLink-app/internal/middleware"
 	"bLink-app/pkg/jwt"
 	"bLink-app/pkg/logger"
@@ -21,7 +20,7 @@ type Router struct {
 	engine         *gin.Engine
 	productHandler *product.Handler
 	orderHandler   *order.Handler
-	userHandler    *handler.Handler
+	userHandler    *user.Handler
 	jwtService     *jwt.JWTService
 	logger         *logger.Logger
 }
@@ -29,7 +28,7 @@ type Router struct {
 func NewRouter(
 	productHandler *product.Handler,
 	orderHandler *order.Handler,
-	userHandler *handler.Handler,
+	userHandler *user.Handler,
 	jwtService *jwt.JWTService,
 	logger *logger.Logger,
 ) *Router {
@@ -62,7 +61,7 @@ func (r *Router) Setup() *gin.Engine {
 	// Register feature routes
 	product.RegisterRoutes(v1, r.productHandler, r.jwtService)
 	order.RegisterRoutes(v1, r.orderHandler, r.jwtService)
-	routes.RegisterRoutes(v1, r.userHandler, r.jwtService)
+	user.RegisterRoutes(v1, r.userHandler, r.jwtService)
 
 	return r.engine
 }
