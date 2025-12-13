@@ -11,7 +11,7 @@ import (
 type Usecase interface {
 	CreateProduct(ctx context.Context, req *CreateProductRequest) (*ProductResponse, error)
 	GetProduct(ctx context.Context, id string) (*ProductResponse, error)
-	GetAllProducts(ctx context.Context) (*[]ProductResponse, error)
+	GetAllProducts(ctx context.Context) ([]ProductResponse, error)
 	UpdateProduct(ctx context.Context, id string, req *UpdateProductRequest) (*ProductResponse, error)
 	DeleteProduct(ctx context.Context, id string) error
 }
@@ -68,7 +68,7 @@ func (u *usecase) GetProduct(ctx context.Context, id string) (*ProductResponse, 
 	return toProductResponse(product), nil
 }
 
-func (u *usecase) GetAllProducts(ctx context.Context) (*[]ProductResponse, error) {
+func (u *usecase) GetAllProducts(ctx context.Context) ([]ProductResponse, error) {
 	products, err := u.repo.FindAll(ctx)
 	if err != nil {
 		u.logger.WithError(err).Error("Failed to get products")
@@ -77,7 +77,7 @@ func (u *usecase) GetAllProducts(ctx context.Context) (*[]ProductResponse, error
 
 	u.logger.WithField("count", len(products)).Info("Products retrieved")
 	responses := toProductResponses(products)
-	return &responses, nil
+	return responses, nil
 }
 
 func (u *usecase) UpdateProduct(ctx context.Context, id string, req *UpdateProductRequest) (*ProductResponse, error) {
@@ -134,25 +134,17 @@ func (u *usecase) UpdateProduct(ctx context.Context, id string, req *UpdateProdu
 func (u *usecase) DeleteProduct(ctx context.Context, id string) error {
 	u.logger.WithField("product_id", id).Info("Deleting product")
 
-	// Transaction
-	err := u.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		result := tx.Delete(&Product{}, "id = ?", id)
+	_, err := u.repo.FindByID(ctx, id)
+	if err != nil {
+		return err
+	}
 
-		if result.Error != nil {
-			u.logger.WithError(result.Error).Error("Failed to delete product")
-			return result.Error
-		}
-
-		// Check RowsAffected to validate deletion
-		if result.RowsAffected == 0 {
-			u.logger.WithField("product_id", id).Warn("Product not found")
-			return errors.New(http.StatusNotFound, "Product not found")
-		}
-
-		return nil
+	err = u.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		return u.repo.Delete(tx, id)
 	})
 
 	if err != nil {
+		u.logger.WithError(err).Error("Failed to delete product")
 		return err
 	}
 

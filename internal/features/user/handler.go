@@ -27,8 +27,8 @@ func NewHandler(usecase UserUsecase, httpHelper *helper.HTTPHandlerHelper) *Hand
 //	@Tags			Users
 //	@Accept			json
 //	@Produce		json
-//	@Param			user	body		model.RegisterRequest	true	"User registration data"
-//	@Success		201		{object}	response.Response{data=model.UserResponse}
+//	@Param			user	body		RegisterRequest	true	"User registration data"
+//	@Success		201		{object}	response.Response{data=UserResponse}
 //	@Failure		400		{object}	response.Response
 //	@Failure		401		{object}	response.Response
 //	@Failure		500		{object}	response.Response
@@ -55,8 +55,8 @@ func (h *Handler) Register(c *gin.Context) {
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param credentials body model.LoginRequest true "Login credentials"
-// @Success 200 {object} response.Response{data=model.LoginResponse}
+// @Param credentials body LoginRequest true "Login credentials"
+// @Success 200 {object} response.Response{data=LoginResponse}
 // @Failure 400 {object} response.Response
 // @Failure 401 {object} response.Response
 // @Failure 500 {object} response.Response
@@ -82,8 +82,8 @@ func (h *Handler) Login(c *gin.Context) {
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param	user body	model.VerifyOTPRequest true "User OTP verification data"
-// @Success 200 {object} response.Response{data=model.UserResponse}
+// @Param	user body	VerifyOTPRequest true "User OTP verification data"
+// @Success 200 {object} response.Response{data=UserResponse}
 // @Failure 400 {object} response.Response
 // @Failure 401 {object} response.Response
 // @Failure 500 {object} response.Response
@@ -110,7 +110,7 @@ func (h *Handler) VerifyEmailOTP(c *gin.Context) {
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Success 200 {object} response.Response{data=model.UserResponse}
+// @Success 200 {object} response.Response{data=UserResponse}
 // @Failure 401 {object} response.Response
 // @Failure 404 {object} response.Response
 // @Failure 500 {object} response.Response
@@ -137,7 +137,7 @@ func (h *Handler) GetProfile(c *gin.Context) {
 // @Produce json
 // @Param page query int false "Page number" default(1)
 // @Param limit query int false "Items per page" default(10)
-// @Success 200 {object} response.Response{data=[]model.UserResponse}
+// @Success 200 {object} response.Response{data=[]UserResponse}
 // @Failure 401 {object} response.Response
 // @Failure 500 {object} response.Response
 // @Security BearerAuth
@@ -180,8 +180,8 @@ func (h *Handler) GetAllUsers(c *gin.Context) {
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param profile body model.UpdateProfileRequest true "Profile data"
-// @Success 200 {object} response.Response{data=model.UserResponse}
+// @Param profile body UpdateProfileRequest true "Profile data"
+// @Success 200 {object} response.Response{data=UserResponse}
 // @Failure 400 {object} response.Response
 // @Failure 401 {object} response.Response
 // @Failure 404 {object} response.Response
@@ -211,7 +211,7 @@ func (h *Handler) UpdateProfile(c *gin.Context) {
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param password body model.ChangePasswordRequest true "Password data"
+// @Param password body ChangePasswordRequest true "Password data"
 // @Success 200 {object} response.Response
 // @Failure 400 {object} response.Response
 // @Failure 401 {object} response.Response
