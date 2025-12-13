@@ -1,8 +1,8 @@
 package database
 
 import (
-	"bLink-app/config"
 	"context"
+	"cukurly-app/config"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"

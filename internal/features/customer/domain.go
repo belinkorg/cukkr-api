@@ -1,7 +1,7 @@
 package customer
 
 import (
-	"bLink-app/pkg/helper"
+	"cukurly-app/pkg/helper"
 	"gorm.io/gorm"
 	"time"
 )

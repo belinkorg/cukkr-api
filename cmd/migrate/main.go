@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bLink-app/config"
+	"cukurly-app/config"
 	"database/sql"
 	"flag"
 	"fmt"

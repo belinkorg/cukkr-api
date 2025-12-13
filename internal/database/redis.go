@@ -1,8 +1,8 @@
 package database
 
 import (
-	"bLink-app/config"
 	"context"
+	"cukurly-app/config"
 	"fmt"
 
 	"github.com/redis/go-redis/v9"

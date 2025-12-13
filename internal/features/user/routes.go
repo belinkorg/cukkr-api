@@ -1,8 +1,8 @@
 package user
 
 import (
-	"bLink-app/internal/middleware"
-	"bLink-app/pkg/jwt"
+	"cukurly-app/internal/middleware"
+	"cukurly-app/pkg/jwt"
 	"github.com/gin-gonic/gin"
 )
 

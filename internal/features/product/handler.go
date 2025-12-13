@@ -1,8 +1,8 @@
 package product
 
 import (
-	"bLink-app/pkg/helper"
-	"bLink-app/pkg/response"
+	"cukurly-app/pkg/helper"
+	"cukurly-app/pkg/response"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

@@ -1,8 +1,8 @@
 package mocks
 
 import (
-	"bLink-app/internal/features/product"
 	"context"
+	"cukurly-app/internal/features/product"
 	"gorm.io/gorm"
 
 	"github.com/stretchr/testify/mock"

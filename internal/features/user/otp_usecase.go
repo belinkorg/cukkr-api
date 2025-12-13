@@ -1,9 +1,9 @@
 package user
 
 import (
-	"bLink-app/pkg/errors"
-	"bLink-app/pkg/logger"
 	"context"
+	"cukurly-app/pkg/errors"
+	"cukurly-app/pkg/logger"
 	"fmt"
 	"math/rand"
 	"net/http"

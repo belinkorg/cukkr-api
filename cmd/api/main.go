@@ -1,16 +1,16 @@
 package main
 
 import (
-	"bLink-app/config"
-	"bLink-app/internal/database"
-	"bLink-app/internal/features/order"
-	"bLink-app/internal/features/product"
-	"bLink-app/internal/features/user"
-	"bLink-app/internal/router"
-	"bLink-app/pkg/helper"
-	"bLink-app/pkg/jwt"
-	"bLink-app/pkg/logger"
-	"bLink-app/pkg/validator"
+	"cukurly-app/config"
+	"cukurly-app/internal/database"
+	"cukurly-app/internal/features/order"
+	"cukurly-app/internal/features/product"
+	"cukurly-app/internal/features/user"
+	"cukurly-app/internal/router"
+	"cukurly-app/pkg/helper"
+	"cukurly-app/pkg/jwt"
+	"cukurly-app/pkg/logger"
+	"cukurly-app/pkg/validator"
 	"fmt"
 	"log"
 )

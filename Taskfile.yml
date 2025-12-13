@@ -124,6 +124,7 @@ tasks:
   # Force migration to specific version
   migrate-force:
     desc: "Force migration to specific version (usage: task migrate-force VERSION=0)"
+    silent: true
     cmds:
       - |
         if [ -z "{{.VERSION}}" ]; then
@@ -171,7 +172,6 @@ tasks:
     cmds:
       - task: docker-up
       - echo "Waiting for databases to be ready..."
-      - sleep 5
       - task: migrate-up
       - echo "Development environment ready!"
       - task: run

@@ -1,7 +1,7 @@
 package product
 
 import (
-	"bLink-app/pkg/helper"
+	"cukurly-app/pkg/helper"
 	"time"
 
 	"gorm.io/gorm"

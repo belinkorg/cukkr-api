@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"bLink-app/pkg/errors"
-	"bLink-app/pkg/jwt"
-	"bLink-app/pkg/response"
+	"cukurly-app/pkg/errors"
+	"cukurly-app/pkg/jwt"
+	"cukurly-app/pkg/response"
 	"net/http"
 	"strings"
 

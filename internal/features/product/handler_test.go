@@ -1,13 +1,13 @@
 package product_test
 
 import (
-	"bLink-app/internal/features/product"
-	_ "bLink-app/pkg/errors"
-	"bLink-app/pkg/helper"
-	"bLink-app/pkg/logger"
-	"bLink-app/pkg/validator"
-	"bLink-app/tests/mocks"
 	"bytes"
+	"cukurly-app/internal/features/product"
+	_ "cukurly-app/pkg/errors"
+	"cukurly-app/pkg/helper"
+	"cukurly-app/pkg/logger"
+	"cukurly-app/pkg/validator"
+	"cukurly-app/tests/mocks"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"

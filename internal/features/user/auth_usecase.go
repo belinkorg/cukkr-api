@@ -1,9 +1,9 @@
 package user
 
 import (
-	"bLink-app/pkg/errors"
-	"bLink-app/pkg/jwt"
-	"bLink-app/pkg/logger"
+	"cukurly-app/pkg/errors"
+	"cukurly-app/pkg/jwt"
+	"cukurly-app/pkg/logger"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )

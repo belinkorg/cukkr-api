@@ -1,19 +1,19 @@
 package router
 
 import (
-	"bLink-app/internal/features/order"
-	"bLink-app/internal/features/product"
-	"bLink-app/internal/features/user"
-	"bLink-app/internal/middleware"
-	"bLink-app/pkg/jwt"
-	"bLink-app/pkg/logger"
+	"cukurly-app/internal/features/order"
+	"cukurly-app/internal/features/product"
+	"cukurly-app/internal/features/user"
+	"cukurly-app/internal/middleware"
+	"cukurly-app/pkg/jwt"
+	"cukurly-app/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	_ "bLink-app/docs" // Import swagger docs
+	_ "cukurly-app/docs" // Import swagger docs
 )
 
 type Router struct {

@@ -1,8 +1,8 @@
 package user
 
 import (
-	"bLink-app/pkg/helper"
-	"bLink-app/pkg/response"
+	"cukurly-app/pkg/helper"
+	"cukurly-app/pkg/response"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
