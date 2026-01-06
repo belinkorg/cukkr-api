@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"bLink-app/pkg/logger"
+	"cukkr-app/pkg/logger"
 	"time"
 
 	"github.com/gin-gonic/gin"

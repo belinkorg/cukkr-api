@@ -1,7 +1,7 @@
 package database
 
 import (
-	"bLink-app/config"
+	"cukkr-app/config"
 	"fmt"
 
 	"gorm.io/driver/postgres"

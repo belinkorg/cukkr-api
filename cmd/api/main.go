@@ -1,21 +1,21 @@
 package main
 
 import (
-	"bLink-app/config"
-	"bLink-app/internal/database"
-	"bLink-app/internal/features/order"
-	"bLink-app/internal/features/product"
-	"bLink-app/internal/features/user"
-	"bLink-app/internal/router"
-	"bLink-app/pkg/helper"
-	"bLink-app/pkg/jwt"
-	"bLink-app/pkg/logger"
-	"bLink-app/pkg/validator"
+	"cukkr-app/config"
+	"cukkr-app/internal/database"
+	"cukkr-app/internal/features/order"
+	"cukkr-app/internal/features/product"
+	"cukkr-app/internal/features/user"
+	"cukkr-app/internal/router"
+	"cukkr-app/pkg/helper"
+	"cukkr-app/pkg/jwt"
+	"cukkr-app/pkg/logger"
+	"cukkr-app/pkg/validator"
 	"fmt"
 	"log"
 )
 
-//	@title			bLink App API
+//	@title			cukkr App API
 //	@version		1.0
 //	@description	Clean Architecture REST API with Go, Gin, PostgreSQL, Redis, and MongoDB
 //	@termsOfService	http://swagger.io/terms/

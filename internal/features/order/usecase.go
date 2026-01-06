@@ -1,10 +1,10 @@
 package order
 
 import (
-	"bLink-app/internal/features/product"
-	"bLink-app/pkg/errors"
-	"bLink-app/pkg/logger"
 	"context"
+	"cukkr-app/internal/features/product"
+	"cukkr-app/pkg/errors"
+	"cukkr-app/pkg/logger"
 	"fmt"
 	"gorm.io/gorm"
 	"net/http"

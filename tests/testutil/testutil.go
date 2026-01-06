@@ -1,7 +1,7 @@
 package testutil
 
 import (
-	"bLink-app/pkg/logger"
+	"cukkr-app/pkg/logger"
 	"github.com/stretchr/testify/assert"
 	"testing"
 

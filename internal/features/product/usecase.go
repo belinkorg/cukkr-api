@@ -1,9 +1,9 @@
 package product
 
 import (
-	"bLink-app/pkg/errors"
-	"bLink-app/pkg/logger"
 	"context"
+	"cukkr-app/pkg/errors"
+	"cukkr-app/pkg/logger"
 	"gorm.io/gorm"
 	"net/http"
 )

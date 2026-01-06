@@ -3,11 +3,11 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: cukurly_postgres
+    container_name: cukkr_postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: cukurly_db
+      POSTGRES_DB: cukkr_db
     ports:
       - "5432:5432"
     volumes:
@@ -20,7 +20,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: cukurly_redis
+    container_name: cukkr_redis
     ports:
       - "6379:6379"
     volumes:
@@ -33,7 +33,7 @@ services:
 
   mongodb:
     image: mongo:7
-    container_name: cukurly_mongo
+    container_name: cukkr_mongo
     ports:
       - "27017:27017"
     volumes:

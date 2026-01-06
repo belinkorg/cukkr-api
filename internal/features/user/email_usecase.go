@@ -1,7 +1,7 @@
 package user
 
 import (
-	"bLink-app/pkg/logger"
+	"cukkr-app/pkg/logger"
 	"fmt"
 	"gopkg.in/mail.v2"
 	"os"

@@ -1,7 +1,7 @@
 package barbershop
 
 import (
-	"bLink-app/pkg/helper"
+	"cukkr-app/pkg/helper"
 	"gorm.io/gorm"
 	"time"
 )

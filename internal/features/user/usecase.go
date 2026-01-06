@@ -1,9 +1,9 @@
 package user
 
 import (
-	"bLink-app/pkg/errors"
-	"bLink-app/pkg/logger"
 	"context"
+	"cukkr-app/pkg/errors"
+	"cukkr-app/pkg/logger"
 	"net/http"
 	"time"
 )

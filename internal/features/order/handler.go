@@ -1,9 +1,9 @@
 package order
 
 import (
-	"bLink-app/pkg/helper"
-	"bLink-app/pkg/jwt"
-	"bLink-app/pkg/response"
+	"cukkr-app/pkg/helper"
+	"cukkr-app/pkg/jwt"
+	"cukkr-app/pkg/response"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

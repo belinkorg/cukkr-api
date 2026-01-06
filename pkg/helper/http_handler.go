@@ -1,10 +1,10 @@
 package helper
 
 import (
-	"bLink-app/pkg/errors"
-	"bLink-app/pkg/logger"
-	"bLink-app/pkg/response"
-	"bLink-app/pkg/validator"
+	"cukkr-app/pkg/errors"
+	"cukkr-app/pkg/logger"
+	"cukkr-app/pkg/response"
+	"cukkr-app/pkg/validator"
 	"fmt"
 	"net/http"
 

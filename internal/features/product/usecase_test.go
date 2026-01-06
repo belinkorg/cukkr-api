@@ -8,10 +8,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	"bLink-app/internal/features/product"
-	"bLink-app/pkg/errors"
-	"bLink-app/tests/mocks"
-	"bLink-app/tests/testutil"
+	"cukkr-app/internal/features/product"
+	"cukkr-app/pkg/errors"
+	"cukkr-app/tests/mocks"
+	"cukkr-app/tests/testutil"
 )
 
 // --- UUID Helper lokal untuk test ---

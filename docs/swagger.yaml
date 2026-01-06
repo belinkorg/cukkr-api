@@ -1,6 +1,6 @@
 basePath: /api/v1
 definitions:
-  bLink-app_pkg_response.Response:
+  cukkr-app_pkg_response.Response:
     properties:
       data: {}
       errors: {}
@@ -260,7 +260,7 @@ info:
     name: MIT
     url: https://opensource.org/licenses/MIT
   termsOfService: http://swagger.io/terms/
-  title: bLink App API
+  title: cukkr App API
   version: "1.0"
 paths:
   /orders:
@@ -275,7 +275,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - $ref: '#/definitions/cukkr-app_pkg_response.Response'
             - properties:
                 data:
                   items:
@@ -285,11 +285,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       security:
       - BearerAuth: []
       summary: Get user orders
@@ -313,7 +313,7 @@ paths:
           description: Created
           schema:
             allOf:
-            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - $ref: '#/definitions/cukkr-app_pkg_response.Response'
             - properties:
                 data:
                   $ref: '#/definitions/internal_features_order.OrderResponse'
@@ -321,15 +321,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       security:
       - BearerAuth: []
       summary: Create a new order
@@ -353,7 +353,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - $ref: '#/definitions/cukkr-app_pkg_response.Response'
             - properties:
                 data:
                   $ref: '#/definitions/internal_features_order.OrderResponse'
@@ -361,15 +361,15 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       security:
       - BearerAuth: []
       summary: Get order by ID
@@ -399,7 +399,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - $ref: '#/definitions/cukkr-app_pkg_response.Response'
             - properties:
                 data:
                   $ref: '#/definitions/internal_features_order.OrderResponse'
@@ -407,19 +407,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       security:
       - BearerAuth: []
       summary: Update order status
@@ -437,7 +437,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - $ref: '#/definitions/cukkr-app_pkg_response.Response'
             - properties:
                 data:
                   items:
@@ -447,7 +447,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       summary: Get all products
       tags:
       - Products
@@ -469,7 +469,7 @@ paths:
           description: Created
           schema:
             allOf:
-            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - $ref: '#/definitions/cukkr-app_pkg_response.Response'
             - properties:
                 data:
                   $ref: '#/definitions/internal_features_product.ProductResponse'
@@ -477,15 +477,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       security:
       - BearerAuth: []
       summary: Create a new product
@@ -508,19 +508,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       security:
       - BearerAuth: []
       summary: Delete a product
@@ -543,7 +543,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - $ref: '#/definitions/cukkr-app_pkg_response.Response'
             - properties:
                 data:
                   $ref: '#/definitions/internal_features_product.ProductResponse'
@@ -551,11 +551,11 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       summary: Get product by ID
       tags:
       - Products
@@ -582,7 +582,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - $ref: '#/definitions/cukkr-app_pkg_response.Response'
             - properties:
                 data:
                   $ref: '#/definitions/internal_features_product.ProductResponse'
@@ -590,19 +590,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       security:
       - BearerAuth: []
       summary: Update a product
@@ -631,7 +631,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - $ref: '#/definitions/cukkr-app_pkg_response.Response'
             - properties:
                 data:
                   items:
@@ -641,11 +641,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       security:
       - BearerAuth: []
       summary: Get all users
@@ -662,19 +662,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       security:
       - BearerAuth: []
       summary: Delete user account
@@ -698,19 +698,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       security:
       - BearerAuth: []
       summary: Change user password
@@ -735,7 +735,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - $ref: '#/definitions/cukkr-app_pkg_response.Response'
             - properties:
                 data:
                   $ref: '#/definitions/internal_features_user.LoginResponse'
@@ -743,15 +743,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       summary: User login
       tags:
       - Users
@@ -767,7 +767,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - $ref: '#/definitions/cukkr-app_pkg_response.Response'
             - properties:
                 data:
                   $ref: '#/definitions/internal_features_user.UserResponse'
@@ -775,15 +775,15 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       security:
       - BearerAuth: []
       summary: Get user profile
@@ -807,7 +807,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - $ref: '#/definitions/cukkr-app_pkg_response.Response'
             - properties:
                 data:
                   $ref: '#/definitions/internal_features_user.UserResponse'
@@ -815,19 +815,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       security:
       - BearerAuth: []
       summary: Update user profile
@@ -852,7 +852,7 @@ paths:
           description: Created
           schema:
             allOf:
-            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - $ref: '#/definitions/cukkr-app_pkg_response.Response'
             - properties:
                 data:
                   $ref: '#/definitions/internal_features_user.UserResponse'
@@ -860,15 +860,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       security:
       - BearerAuth: []
       summary: Register a new user
@@ -893,7 +893,7 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/bLink-app_pkg_response.Response'
+            - $ref: '#/definitions/cukkr-app_pkg_response.Response'
             - properties:
                 data:
                   $ref: '#/definitions/internal_features_user.UserResponse'
@@ -901,15 +901,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/bLink-app_pkg_response.Response'
+            $ref: '#/definitions/cukkr-app_pkg_response.Response'
       summary: User Verify Email OTP
       tags:
       - Users

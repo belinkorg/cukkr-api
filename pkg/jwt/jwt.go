@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	"bLink-app/pkg/errors"
+	"cukkr-app/pkg/errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"

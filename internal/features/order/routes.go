@@ -1,8 +1,8 @@
 package order
 
 import (
-	"bLink-app/internal/middleware"
-	"bLink-app/pkg/jwt"
+	"cukkr-app/internal/middleware"
+	"cukkr-app/pkg/jwt"
 
 	"github.com/gin-gonic/gin"
 )

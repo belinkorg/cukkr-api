@@ -1,7 +1,7 @@
 package order
 
 import (
-	"bLink-app/pkg/helper"
+	"cukkr-app/pkg/helper"
 	"time"
 
 	"gorm.io/gorm"

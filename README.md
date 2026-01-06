@@ -1,19 +1,26 @@
-=== FILE: README.md ===
-# Go Clean Architecture - Feature-Based
+# Barber Booking API
 
-Backend aplikasi dengan Clean Architecture menggunakan pendekatan feature-based yang simple, scalable, dan mudah di-maintain.
+[![CI](https://github.com/username/barber-api/workflows/CI/badge.svg)](https://github.com/username/barber-api/actions)
+[![Docker](https://github.com/username/barber-api/workflows/Docker/badge.svg)](https://github.com/username/barber-api/actions)
+[![Go Version](https://img.shields.io/badge/Go-1.21-blue.svg)](https://golang.org)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
+Backend API untuk aplikasi booking barbershop dengan Clean Architecture, CI/CD automation, dan production-ready deployment.
 
 ## 🚀 Features
 
 - ✅ Clean Architecture dengan feature-based structure
 - ✅ PostgreSQL untuk data persistence
-- ✅ Redis untuk caching
-- ✅ MongoDB untuk logging (optional)
-- ✅ JWT Authentication
+- ✅ Redis untuk caching dan async job queue (Asynq)
+- ✅ JWT Authentication & Authorization
+- ✅ Email OTP verification
+- ✅ Async email processing dengan Asynq
 - ✅ Request validation
 - ✅ Structured logging
 - ✅ Database Migration
 - ✅ Unit Testing dengan coverage
+- ✅ CI/CD dengan GitHub Actions
+- ✅ Docker containerization
 - ✅ CORS middleware
 - ✅ Dependency Injection
 - ✅ Error handling
@@ -22,13 +29,20 @@ Backend aplikasi dengan Clean Architecture menggunakan pendekatan feature-based 
 ## 📁 Project Structure
 
 ```
-my-app/
+barber-api/
+├── .github/
+│   ├── workflows/
+│   │   ├── ci.yml              # CI workflow (test & build)
+│   │   └── docker.yml          # Docker build & push
+│   └── PULL_REQUEST_TEMPLATE.md
 ├── cmd/
-│   ├── api/              # Application entry point
-│   └── migrate/          # Database migration CLI
+│   ├── api/                     # Application entry point
+│   │   └── main.go
+│   └── migrate/                 # Database migration CLI
+│       └── main.go
 ├── internal/
-│   ├── features/         # Feature modules (product, order)
-│   │   ├── product/
+│   ├── features/                # Feature modules
+│   │   ├── user/
 │   │   │   ├── domain.go
 │   │   │   ├── repository.go
 │   │   │   ├── repository_test.go
@@ -37,559 +51,966 @@ my-app/
 │   │   │   ├── handler.go
 │   │   │   ├── handler_test.go
 │   │   │   └── dto.go
-│   │   └── order/
-│   │       └── ... (same structure)
-│   ├── middleware/       # HTTP middlewares
-│   ├── database/         # Database connections
-│   └── router/           # Route definitions
-├── pkg/                  # Shared packages
+│   │   ├── barbershop/
+│   │   ├── booking/
+│   │   └── ...
+│   ├── middleware/              # HTTP middlewares
+│   ├── database/                # Database connections
+│   └── router/                  # Route definitions
+├── pkg/                         # Shared packages
 │   ├── logger/
 │   ├── response/
 │   ├── jwt/
 │   ├── validator/
+│   ├── email/
 │   └── errors/
-├── migrations/           # SQL migration files
-│   ├── 000001_create_products_table.up.sql
-│   ├── 000001_create_products_table.down.sql
+├── migrations/                  # SQL migration files
+│   ├── 000001_create_users_table.up.sql
+│   ├── 000001_create_users_table.down.sql
 │   └── ...
-├── tests/
-│   ├── mocks/           # Mock implementations
-│   └── testutil/        # Test utilities
-├── config/              # Configuration
-└── docker-compose.yaml
+├── docs/                        # Swagger documentation
+├── .env.example                 # Environment variables template
+├── .gitignore
+├── .dockerignore
+├── Dockerfile                   # Production Docker image
+├── docker-compose.yml           # Local development
+├── Taskfile.yml                 # Task runner
+├── go.mod
+├── go.sum
+└── README.md
 ```
 
 ## 🛠️ Tech Stack
 
-- **Go 1.23**
+- **Go 1.21** - Programming language
 - **Gin** - HTTP framework
 - **GORM** - ORM
 - **PostgreSQL** - Primary database
-- **Redis** - Caching
-- **MongoDB** - Logging/Analytics
+- **Redis** - Caching & job queue
+- **Asynq** - Async task processing
 - **JWT** - Authentication
 - **Validator** - Request validation
 - **Logrus** - Structured logging
 - **golang-migrate** - Database migrations
 - **Testify** - Testing framework
-- **SQLMock** - Database mocking
+- **Docker** - Containerization
+- **GitHub Actions** - CI/CD
+- **GHCR** - Container registry
 
 ## 🏃 Getting Started
 
 ### Prerequisites
 
-- Go 1.23+
+- Go 1.21+
 - Docker & Docker Compose
-- Make (optional, tapi recommended)
+- Task (optional, tapi recommended)
 
 ### Installation
 
-1. Clone repository
+1. **Clone repository**
 ```bash
-git clone <repo-url>
-cd my-app
+git clone https://github.com/username/barber-api.git
+cd barber-api
 ```
 
-2. Install dependencies
+2. **Install Task runner (optional)**
 ```bash
-make install
+# macOS
+brew install go-task/tap/go-task
+
+# Linux
+sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+
+# Windows
+choco install go-task
 ```
 
-3. Copy environment file
+3. **Setup environment**
 ```bash
+# Copy environment file
 cp .env.example .env
+
+# Edit .env dengan konfigurasi lokal kamu
+nano .env
 ```
 
-4. Start development environment (All-in-one)
+4. **Start development environment**
 ```bash
-make dev
-```
+# All-in-one (start docker, migrate, run)
+task dev
 
-Atau manual:
-
-```bash
-# Start databases
-make docker-up
-
-# Wait for databases ready, then run migrations
-make migrate-up
-
-# Run application
-make run
+# Atau manual:
+task docker-up      # Start PostgreSQL & Redis
+task migrate-up     # Run migrations
+task run            # Run application
 ```
 
 Server akan berjalan di `http://localhost:8080`
+
+### Quick Commands
+
+```bash
+# Development
+task run              # Run application
+task dev              # Start all (docker + migrate + run)
+
+# Docker
+task docker-up        # Start databases
+task docker-down      # Stop and remove volumes
+task docker-logs      # View logs
+
+# Testing
+task test             # Run all tests
+task test-unit        # Run unit tests only
+task test-coverage    # Generate coverage report
+
+# Database
+task migrate-up       # Run migrations
+task migrate-down     # Rollback migration
+task migrate-version  # Check current version
+
+# Build
+task build            # Build binary
+task clean            # Clean build artifacts
+
+# Code Quality
+task fmt              # Format code
+task lint             # Run linter
+```
 
 ## 📝 API Endpoints
 
 ### Health Check
 ```
-GET /health
+GET    /health                      # Health check endpoint
 ```
 
-### Products
+## 🔄 Git Workflow & Branch Strategy
+
+### Branch Structure
+
 ```
-GET    /api/v1/products          # Get all products
-GET    /api/v1/products/:id      # Get product by ID
-POST   /api/v1/products          # Create product (auth required)
-PUT    /api/v1/products/:id      # Update product (auth required)
-DELETE /api/v1/products/:id      # Delete product (auth required)
+main (production)
+  ↑
+  └── dev (staging)
+       ↑
+       ├── feature/booking-system
+       ├── feature/payment-integration
+       ├── bugfix/email-validation
+       └── hotfix/critical-bug
 ```
 
-### Orders
-```
-POST   /api/v1/orders            # Create order (auth required)
-GET    /api/v1/orders            # Get user orders (auth required)
-GET    /api/v1/orders/:id        # Get order by ID (auth required)
-PATCH  /api/v1/orders/:id/status # Update order status (auth required)
-```
-
-## 🗄️ Database Migration
-
-### Create New Migration
+### Branch Naming Convention
 
 ```bash
-# Manual creation
-touch migrations/000003_create_users_table.up.sql
-touch migrations/000003_create_users_table.down.sql
+# Features
+feature/booking-system
+feature/user-profile
+feature/payment-integration
+
+# Bug fixes
+bugfix/login-error
+bugfix/email-validation
+
+# Hotfixes (urgent production fixes)
+hotfix/security-patch
+hotfix/payment-crash
+
+# Chores
+chore/update-dependencies
+chore/refactor-code
 ```
 
-### Run Migration
+### Commit Message Convention
 
 ```bash
-# Migrate up
-make migrate-up
+# Format: <type>: <description>
 
-# Migrate down
-make migrate-down
+feat: add booking cancellation feature
+fix: resolve email validation bug
+docs: update API documentation
+style: format code with gofmt
+refactor: simplify booking logic
+test: add unit tests for user service
+chore: update dependencies
+```
 
-# Check version
-make migrate-version
+### Development Workflow
 
-# Force to specific version
-make migrate-force VERSION=2
+#### 1. **Start New Feature**
+
+```bash
+# Update dev branch
+git checkout dev
+git pull origin dev
+
+# Create feature branch
+git checkout -b feature/booking-system
+
+# Work on your feature
+# ... make changes ...
+
+# Run tests locally
+task test
+
+# Commit changes
+git add .
+git commit -m "feat: add booking system with validation"
+
+# Push to GitHub
+git push origin feature/booking-system
+```
+
+#### 2. **Create Pull Request**
+
+```
+1. Go to GitHub repository
+2. Click "Pull requests" → "New pull request"
+3. Base: dev ← Compare: feature/booking-system
+4. Fill PR template:
+   - Description
+   - Type of change
+   - Checklist
+5. Create pull request
+```
+
+**CI akan otomatis run:**
+- ✅ Run all tests
+- ✅ Build application
+- ✅ Comment hasil di PR
+
+#### 3. **Review & Merge**
+
+```
+1. Wait for CI to pass ✅
+2. Request review (jika ada team)
+3. Address review comments
+4. Merge pull request ke dev
+5. Delete feature branch
+```
+
+**Setelah merge ke dev:**
+- ✅ CI run lagi
+- ✅ Docker image di-build → `ghcr.io/username/barber-api:dev`
+
+#### 4. **Deploy to Production**
+
+```bash
+# Buat PR: dev → main di GitHub
+# Setelah merged:
+
+git checkout main
+git pull origin main
+
+# Create release tag
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+**Setelah push tag:**
+- ✅ Docker images di-build:
+    - `ghcr.io/username/barber-api:v1.0.0`
+    - `ghcr.io/username/barber-api:latest`
+
+### Hotfix Workflow (Emergency)
+
+```bash
+# Create hotfix dari main
+git checkout main
+git pull origin main
+git checkout -b hotfix/critical-payment-bug
+
+# Fix the bug
+# ... make changes ...
+
+# Test
+task test
+
+# Commit & push
+git add .
+git commit -m "fix: resolve critical payment bug"
+git push origin hotfix/critical-payment-bug
+
+# Buat 2 PR:
+# 1. hotfix/xxx → main (urgent)
+# 2. hotfix/xxx → dev (keep in sync)
+
+# Setelah merged ke main, create tag
+git checkout main
+git pull origin main
+git tag v1.0.1 -m "Hotfix: critical payment bug"
+git push origin v1.0.1
+```
+
+## 🔒 Branch Protection Rules
+
+### `dev` Branch
+
+**Required:**
+- ✅ Require pull request before merging
+- ✅ Require approvals: 1 (atau 0 untuk solo dev)
+- ✅ Require status checks to pass
+    - ✅ test (CI workflow)
+- ✅ Require conversation resolution before merging
+
+### `main` Branch
+
+**Required:**
+- ✅ Require pull request before merging
+- ✅ Require approvals: 1
+- ✅ Require status checks to pass
+    - ✅ test (CI workflow)
+- ✅ Require conversation resolution before merging
+- ✅ Do not allow bypassing the above settings
+
+**Setup di GitHub:**
+```
+Repository → Settings → Branches → Add branch protection rule
+```
+
+## 🐳 Docker & Deployment
+
+### Local Development
+
+```bash
+# Start all services
+docker-compose up -d
+
+# Check status
+docker-compose ps
+
+# View logs
+docker-compose logs -f api
+
+# Stop all
+docker-compose down
+
+# Stop and remove volumes
+docker-compose down -v
+```
+
+### Build Docker Image
+
+```bash
+# Build
+docker build -t barber-api:latest .
+
+# Run
+docker run -d \
+  --name barber-api \
+  -p 8080:8080 \
+  --env-file .env \
+  barber-api:latest
+
+# Check logs
+docker logs -f barber-api
+```
+
+### Pull from GitHub Container Registry
+
+```bash
+# Login (untuk private images)
+echo $GITHUB_TOKEN | docker login ghcr.io -u username --password-stdin
+
+# Pull
+docker pull ghcr.io/username/barber-api:latest
+docker pull ghcr.io/username/barber-api:dev
+docker pull ghcr.io/username/barber-api:v1.0.0
+
+# Run
+docker run -d \
+  -p 8080:8080 \
+  --env-file .env \
+  ghcr.io/username/barber-api:latest
+```
+
+### Available Docker Tags
+
+```
+ghcr.io/username/barber-api:latest    # Latest stable (from main)
+ghcr.io/username/barber-api:dev       # Development (from dev)
+ghcr.io/username/barber-api:v1.0.0    # Specific version (from tag)
 ```
 
 ## 🧪 Testing
 
-### Run All Tests
+### Test Structure
 
-```bash
-make test
+```
+internal/features/user/
+├── repository_test.go    # Database layer tests (with sqlmock)
+├── usecase_test.go       # Business logic tests (with mocks)
+└── handler_test.go       # HTTP handler tests (with mocks)
 ```
 
-### Run Unit Tests Only
+### Writing Tests
 
-```bash
-make test-unit
+#### Repository Test (with sqlmock)
 ```
+func TestCreateUser_Success(t *testing.T) {
+    // Setup
+    db, mock, err := sqlmock.New()
+    require.NoError(t, err)
+    defer db.Close()
 
-### Run Specific Test
+    gormDB, err := gorm.Open(postgres.New(postgres.Config{
+        Conn: db,
+    }), &gorm.Config{})
+    require.NoError(t, err)
 
-```bash
-make test-specific TEST=TestCreateProduct_Success
-```
+    repo := NewRepository(gormDB)
 
-### Generate Coverage Report
+    user := &User{
+        Name:  "John Doe",
+        Email: "john@example.com",
+    }
 
-```bash
-make test-coverage
-# Opens coverage.html in browser
-```
+    // Mock expectations
+    mock.ExpectBegin()
+    mock.ExpectQuery(`INSERT INTO "users"`).
+        WithArgs(user.Name, user.Email, sqlmock.AnyArg()).
+        WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+    mock.ExpectCommit()
 
-### Test Coverage Example
+    // Execute
+    err = repo.Create(context.Background(), user)
 
-```bash
-$ make test-coverage
-
-=== RUN   TestCreateProduct_Success
---- PASS: TestCreateProduct_Success (0.00s)
-=== RUN   TestGetProduct_Success
---- PASS: TestGetProduct_Success (0.00s)
-=== RUN   TestGetProduct_NotFound
---- PASS: TestGetProduct_NotFound (0.00s)
-
-PASS
-coverage: 85.4% of statements
-Coverage report generated: coverage.html
-```
-
-### Testing Best Practices
-
-#### 1. **Unit Test Structure (AAA Pattern)**
-```go
-func TestCreateProduct_Success(t *testing.T) {
-    // Arrange - Setup test data & mocks
-    mockRepo := new(mocks.ProductRepositoryMock)
-    mockRepo.On("Create", mock.Anything, mock.Anything).Return(nil)
-    
-    // Act - Execute the function
-    result, err := usecase.CreateProduct(ctx, req)
-    
-    // Assert - Verify results
+    // Assert
     assert.NoError(t, err)
-    assert.NotNil(t, result)
-    mockRepo.AssertExpectations(t)
+    assert.NoError(t, mock.ExpectationsWereMet())
 }
 ```
 
-#### 2. **Test Coverage Goals**
-- Repository Layer: 80%+
-- Usecase Layer: 90%+
-- Handler Layer: 75%+
-
-#### 3. **Mock Best Practices**
-- Mock eksternal dependencies (database, redis, APIs)
-- Jangan mock domain objects
-- Use interface untuk dependency injection
-
-## 🔧 Development Commands
-
-```bash
-# Run application
-make run
-
-# Build binary
-make build
-
-# Run tests
-make test
-
-# Test with coverage
-make test-coverage
-
-# Format code
-make fmt
-
-# Run linter
-make lint
-
-# Database migrations
-make migrate-up
-make migrate-down
-
-# Docker
-make docker-up
-make docker-down
-make docker-logs
-
-# Development (all-in-one)
-make dev
+#### Usecase Test (with mocks)
 ```
-
-## 🧪 Testing Example
-
-### Product Usecase Test
-```go
-// tests successful product creation
-func TestCreateProduct_Success(t *testing.T) {
-    mockRepo := new(mocks.ProductRepositoryMock)
+func TestCreateBooking_Success(t *testing.T) {
+    // Arrange
+    mockRepo := new(mocks.BookingRepositoryMock)
+    mockBarberRepo := new(mocks.BarbershopRepositoryMock)
     logger := testutil.GetTestLogger()
-    uc := NewUsecase(mockRepo, logger)
+    uc := NewUsecase(mockRepo, mockBarberRepo, logger)
 
-    req := &CreateProductRequest{
-        Name:     "Laptop",
-        Price:    15000000,
-        Stock:    10,
-        Category: "Electronics",
+    req := &CreateBookingRequest{
+        BarbershopID: 1,
+        DateTime:     time.Now().Add(24 * time.Hour),
+        ServiceType:  "Haircut",
     }
 
-    mockRepo.On("Create", mock.Anything, mock.AnythingOfType("*product.Product")).
+    barbershop := &Barbershop{ID: 1, Name: "Great Barber"}
+    
+    mockBarberRepo.On("FindByID", mock.Anything, int64(1)).
+        Return(barbershop, nil)
+    mockRepo.On("Create", mock.Anything, mock.AnythingOfType("*booking.Booking")).
         Return(nil)
 
-    result, err := uc.CreateProduct(context.Background(), req)
+    // Act
+    result, err := uc.CreateBooking(context.Background(), 1, req)
 
+    // Assert
     assert.NoError(t, err)
     assert.NotNil(t, result)
-    assert.Equal(t, "Laptop", result.Name)
+    assert.Equal(t, int64(1), result.BarbershopID)
+    mockRepo.AssertExpectations(t)
+    mockBarberRepo.AssertExpectations(t)
 }
 ```
 
-### Order Integration Test
-```go
-// tests order creation with stock validation
-func TestCreateOrder_InsufficientStock(t *testing.T) {
-    mockOrderRepo := new(mocks.OrderRepositoryMock)
-    mockProductRepo := new(mocks.ProductRepositoryMock)
-    logger := testutil.GetTestLogger()
-    uc := NewUsecase(mockOrderRepo, mockProductRepo, logger)
+### Run Tests
 
-    product := &product.Product{
-        ID: 1, Stock: 5, // Only 5 in stock
-    }
-    
-    mockProductRepo.On("FindByID", mock.Anything, int64(1)).
-        Return(product, nil)
+```bash
+# All tests
+task test
 
-    req := &CreateOrderRequest{
-        Items: []OrderItemRequest{{ProductID: 1, Quantity: 10}},
-    }
+# Unit tests only
+task test-unit
 
-    result, err := uc.CreateOrder(context.Background(), 1, req)
+# With coverage
+task test-coverage
 
-    assert.Error(t, err)
-    assert.Equal(t, errors.ErrInsufficientStock, err)
-    assert.Nil(t, result)
-}
+# Specific test
+task test-specific TEST=TestCreateBooking_Success
+
+# Verbose
+go test -v ./...
 ```
 
-## 🔑 Key Testing Principles
+### Coverage Goals
 
-### 1. **Separation of Concerns**
-Setiap layer di-test terpisah dengan mock dependencies-nya:
-- **Repository Test**: Mock database (sqlmock)
-- **Usecase Test**: Mock repository
-- **Handler Test**: Mock usecase
+- Repository Layer: **80%+**
+- Usecase Layer: **90%+**
+- Handler Layer: **75%+**
 
-### 2. **Test Independence**
-Setiap test harus independent dan bisa run dalam order apapun.
+## 🗄️ Database Migrations
 
-### 3. **Table-Driven Tests**
-```go
-func TestValidation(t *testing.T) {
-    tests := []struct {
-        name    string
-        input   CreateProductRequest
-        wantErr bool
-    }{
-        {
-            name: "valid product",
-            input: CreateProductRequest{Name: "Product", Price: 100},
-            wantErr: false,
-        },
-        {
-            name: "invalid price",
-            input: CreateProductRequest{Name: "Product", Price: -100},
-            wantErr: true,
-        },
-    }
+### Create New Migration
 
-    for _, tt := range tests {
-        t.Run(tt.name, func(t *testing.T) {
-            err := validator.Validate(tt.input)
-            if tt.wantErr {
-                assert.Error(t, err)
-            } else {
-                assert.NoError(t, err)
-            }
-        })
-    }
-}
+```bash
+task migrate-create NAME=create_bookings_table
+
+# Creates:
+# migrations/000XXX_create_bookings_table.up.sql
+# migrations/000XXX_create_bookings_table.down.sql
 ```
 
-## 🚀 Migration Best Practices
-
-### 1. **Naming Convention**
-```
-000001_create_products_table.up.sql
-000001_create_products_table.down.sql
-```
-- Sequential numbering (6 digits)
-- Descriptive name
-- Separate up/down files
-
-### 2. **Migration File Structure**
+### Migration File Example
 
 **Up Migration:**
-```sql
-CREATE TABLE IF NOT EXISTS products (
+```
+-- migrations/000002_create_bookings_table.up.sql
+CREATE TABLE IF NOT EXISTS bookings (
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    price DECIMAL(10,2) NOT NULL CHECK (price > 0),
-    stock INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0),
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    barbershop_id BIGINT NOT NULL REFERENCES barbershops(id) ON DELETE CASCADE,
+    booking_date TIMESTAMP NOT NULL,
+    service_type VARCHAR(100) NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'pending',
+    total_price DECIMAL(10,2) NOT NULL CHECK (total_price > 0),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_products_name ON products(name);
+CREATE INDEX idx_bookings_user_id ON bookings(user_id);
+CREATE INDEX idx_bookings_barbershop_id ON bookings(barbershop_id);
+CREATE INDEX idx_bookings_status ON bookings(status);
 ```
 
 **Down Migration:**
-```sql
-DROP INDEX IF EXISTS idx_products_name;
-DROP TABLE IF EXISTS products;
+```
+-- migrations/000002_create_bookings_table.down.sql
+DROP INDEX IF EXISTS idx_bookings_status;
+DROP INDEX IF EXISTS idx_bookings_barbershop_id;
+DROP INDEX IF EXISTS idx_bookings_user_id;
+DROP TABLE IF EXISTS bookings;
 ```
 
-### 3. **Migration Rules**
-- ✅ Always create indexes for foreign keys
-- ✅ Add constraints (NOT NULL, CHECK, etc.)
-- ✅ Use IF EXISTS / IF NOT EXISTS
-- ✅ Always provide down migration
-- ❌ Never modify existing migrations (create new ones)
-- ❌ Avoid data migrations in schema migrations
-
-### 4. **Running Migrations in Production**
+### Migration Commands
 
 ```bash
-# Check current version
-make migrate-version
+# Run migrations
+task migrate-up
 
-# Test migration in staging first
-make migrate-up
+# Rollback last migration
+task migrate-down
 
-# If issues, rollback
-make migrate-down
+# Check version
+task migrate-version
 
-# Force to specific version if needed
-make migrate-force VERSION=1
+# Force to specific version
+task migrate-force VERSION=1
+```
+
+### Migration Best Practices
+
+- ✅ Use sequential numbering (000001, 000002, ...)
+- ✅ Descriptive names (create_bookings_table, add_user_phone)
+- ✅ Add indexes for foreign keys
+- ✅ Use constraints (NOT NULL, CHECK, etc.)
+- ✅ Always provide down migration
+- ✅ Test in development first
+- ❌ Never modify existing migrations (create new ones)
+- ❌ Don't mix schema and data migrations
+
+## 🚀 CI/CD Pipeline
+
+### Workflows
+
+#### 1. **CI Workflow** (`.github/workflows/ci.yml`)
+
+**Triggers:**
+- Pull request ke `main` atau `dev`
+- Push ke `main` atau `dev`
+
+**Steps:**
+1. Checkout code
+2. Setup Go 1.21
+3. Download dependencies
+4. Run tests dengan PostgreSQL & Redis services
+5. Build binary
+6. Comment hasil di PR (jika PR)
+
+#### 2. **Docker Workflow** (`.github/workflows/docker.yml`)
+
+**Triggers:**
+- Push ke `main` atau `dev`
+- Push tag `v*`
+
+**Steps:**
+1. Checkout code
+2. Login ke GitHub Container Registry
+3. Build Docker image
+4. Push dengan tags:
+    - `dev` branch → `:dev`
+    - `main` branch → `:latest`
+    - Tag `v1.0.0` → `:v1.0.0` dan `:latest`
+
+### Workflow Diagram
+
+```
+┌─────────────────────────────────────────────────────┐
+│ Developer: Push code                                │
+└────────────────┬────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────┐
+│ Create PR: feature/xxx → dev                        │
+└────────────────┬────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────┐
+│ CI Workflow                                         │
+│ ✅ Run tests (with PostgreSQL & Redis)             │
+│ ✅ Build binary                                     │
+│ ✅ Comment PR                                       │
+└────────────────┬────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────┐
+│ Review & Merge PR                                   │
+└────────────────┬────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────┐
+│ Push to dev branch                                  │
+└────────────────┬────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────┐
+│ CI Workflow (again)                                 │
+│ ✅ Run tests                                        │
+└────────────────┬────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────┐
+│ Docker Workflow                                     │
+│ ✅ Build image                                      │
+│ ✅ Push to ghcr.io/username/barber-api:dev         │
+└────────────────┬────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────┐
+│ Staging Server: Deploy dev image                    │
+└─────────────────────────────────────────────────────┘
+
+                 (When ready for production)
+                 
+┌─────────────────────────────────────────────────────┐
+│ Create PR: dev → main                               │
+│ Review & Merge                                      │
+└────────────────┬────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────┐
+│ Create Release Tag: v1.0.0                          │
+└────────────────┬────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────┐
+│ Docker Workflow                                     │
+│ ✅ Build image                                      │
+│ ✅ Push to ghcr.io/username/barber-api:v1.0.0     │
+│ ✅ Push to ghcr.io/username/barber-api:latest     │
+└────────────────┬────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────┐
+│ Production Server: Deploy v1.0.0 image              │
+└─────────────────────────────────────────────────────┘
 ```
 
 ## 🏗️ Architecture Principles
 
-### 1. **Dependency Rule**
+### 1. Clean Architecture Layers
+
 ```
-External → Framework → Interface Adapters → Use Cases → Entities
-```
-Inner layers tidak depend ke outer layers.
-
-### 2. **Single Responsibility**
-Setiap file punya satu tanggung jawab:
-- `domain.go` - Business entities
-- `repository.go` - Data access
-- `usecase.go` - Business logic
-- `handler.go` - HTTP handling
-
-### 3. **Interface Segregation**
-```go
-// Good - Small, focused interfaces
-type ProductRepository interface {
-    Create(ctx context.Context, p *Product) error
-    FindByID(ctx context.Context, id int64) (*Product, error)
-}
-
-// Bad - Large, monolithic interface
-type Repository interface {
-    CreateProduct(...)
-    CreateOrder(...)
-    CreateUser(...)
-    // ... 50 more methods
-}
+┌─────────────────────────────────────────┐
+│ External (Framework & Drivers)          │
+│ - Gin, GORM, PostgreSQL, Redis          │
+└────────────────┬────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────┐
+│ Interface Adapters                      │
+│ - Handlers, Repositories                │
+└────────────────┬────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────┐
+│ Use Cases (Business Logic)              │
+│ - Usecases                              │
+└────────────────┬────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────┐
+│ Entities (Domain)                       │
+│ - Domain models, Business rules         │
+└─────────────────────────────────────────┘
 ```
 
-### 4. **Dependency Injection**
-```go
+**Dependency Rule:** Inner layers tidak depend ke outer layers.
+
+### 2. Feature-Based Structure
+
+Setiap feature adalah module yang self-contained:
+
+```
+internal/features/booking/
+├── domain.go       # Business entities
+├── repository.go   # Data access interface & implementation
+├── usecase.go      # Business logic
+├── handler.go      # HTTP handlers
+├── dto.go          # Data transfer objects
+└── *_test.go       # Tests
+```
+
+**Benefits:**
+- ✅ Easy to understand
+- ✅ Easy to test
+- ✅ Easy to scale (extract to microservice)
+- ✅ Clear boundaries
+
+### 3. Dependency Injection
+
+```
 // Constructor injection
-func NewUsecase(repo Repository, logger *logger.Logger) Usecase {
-    return &usecase{
-        repo:   repo,
-        logger: logger,
+type bookingUsecase struct {
+    bookingRepo     Repository
+    barbershopRepo  barbershop.Repository
+    emailService    email.Service
+    logger          *logger.Logger
+}
+
+func NewUsecase(
+    bookingRepo Repository,
+    barbershopRepo barbershop.Repository,
+    emailService email.Service,
+    logger *logger.Logger,
+) Usecase {
+    return &bookingUsecase{
+        bookingRepo:    bookingRepo,
+        barbershopRepo: barbershopRepo,
+        emailService:   emailService,
+        logger:         logger,
     }
 }
-
-// Easy to test with mocks
-mockRepo := new(mocks.ProductRepositoryMock)
-uc := NewUsecase(mockRepo, testLogger)
 ```
 
-## 📦 Migration to Microservices
+**Benefits:**
+- ✅ Easy to test (inject mocks)
+- ✅ Loose coupling
+- ✅ Flexible configuration
 
-Feature-based structure membuat migration ke microservices mudah:
+## 🔐 Security Best Practices
 
-### Option 1: Extract by Feature
-```bash
-# Extract product service
-mkdir ../product-service
-cp -r internal/features/product ../product-service/internal/
-cp -r pkg/ ../product-service/pkg/
-cp -r migrations/000001* ../product-service/migrations/
+### Environment Variables
 
-# Extract order service
-mkdir ../order-service
-cp -r internal/features/order ../order-service/internal/
-cp -r pkg/ ../order-service/pkg/
-cp -r migrations/000002* ../order-service/migrations/
+**Never commit:**
+- ❌ `.env` file
+- ❌ Secrets or credentials
+- ❌ API keys
+
+**Always use:**
+- ✅ `.env.example` (template without values)
+- ✅ Environment variables in production
+- ✅ Secret managers (for production)
+
+### Authentication
+
 ```
+// JWT middleware
+router.Use(middleware.AuthMiddleware(jwtService))
 
-### Option 2: Shared Libraries
-```bash
-# Create shared library
-mkdir ../shared-lib
-cp -r pkg/ ../shared-lib/
-
-# Update go.mod
-go get github.com/yourorg/shared-lib
-```
-
-### Communication Between Services
-```go
-// Add gRPC or HTTP client in infrastructure
-type ProductClient interface {
-    GetProduct(ctx context.Context, id int64) (*Product, error)
-}
-
-// Use in order service
-type orderUsecase struct {
-    orderRepo     Repository
-    productClient ProductClient // External service
-    logger        *logger.Logger
+// Protected routes
+authorized := router.Group("/api/v1")
+authorized.Use(middleware.AuthMiddleware(jwtService))
+{
+    authorized.POST("/bookings", bookingHandler.Create)
+    authorized.GET("/bookings", bookingHandler.GetUserBookings)
 }
 ```
 
-## 🔒 Security Best Practices
+### Input Validation
 
-1. **Environment Variables**: Never commit `.env` file
-2. **JWT Secret**: Use strong random string in production
-3. **Database Credentials**: Rotate regularly
-4. **Input Validation**: Always validate user input
-5. **SQL Injection**: Use parameterized queries (GORM handles this)
-6. **Rate Limiting**: Add middleware untuk production
+```
+type CreateBookingRequest struct {
+    BarbershopID int64     `json:"barbershop_id" validate:"required,gt=0"`
+    DateTime     time.Time `json:"date_time" validate:"required"`
+    ServiceType  string    `json:"service_type" validate:"required,min=3,max=100"`
+}
+
+// Validate
+if err := validator.Validate(req); err != nil {
+    return response.BadRequest(c, err.Error())
+}
+```
+
+### Security Headers
+
+```
+// CORS
+router.Use(cors.New(cors.Config{
+    AllowOrigins:     []string{"https://yourdomain.com"},
+    AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+    AllowHeaders:     []string{"Authorization", "Content-Type"},
+    AllowCredentials: true,
+}))
+
+// Security headers
+router.Use(func(c *gin.Context) {
+    c.Header("X-Content-Type-Options", "nosniff")
+    c.Header("X-Frame-Options", "DENY")
+    c.Header("X-XSS-Protection", "1; mode=block")
+    c.Next()
+})
+```
 
 ## 📊 Monitoring & Logging
 
-### Structured Logging Example
-```go
+### Structured Logging
+
+```
 logger.WithFields(map[string]interface{}{
-    "user_id":    userID,
-    "product_id": productID,
-    "action":     "create_order",
-}).Info("Order created successfully")
+    "user_id":       userID,
+    "barbershop_id": barbershopID,
+    "booking_id":    bookingID,
+    "action":        "create_booking",
+    "status":        "success",
+}).Info("Booking created successfully")
 ```
 
-### MongoDB for Logs (Optional)
-```go
-// Store logs to MongoDB for analytics
-type LogEntry struct {
-    Timestamp time.Time
-    Level     string
-    Message   string
-    UserID    int64
-    Action    string
-}
+### Error Tracking
 
-mongoCollection.InsertOne(ctx, logEntry)
+```
+logger.WithFields(map[string]interface{}{
+    "user_id":    userID,
+    "error":      err.Error(),
+    "stack_trace": debug.Stack(),
+}).Error("Failed to create booking")
+```
+
+### Health Check Endpoint
+
+```
+// GET /health
+{
+    "status": "healthy",
+    "database": "connected",
+    "redis": "connected",
+    "timestamp": "2024-01-15T10:30:00Z"
+}
 ```
 
 ## 🤝 Contributing
 
-1. Fork repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Write tests for your changes
-4. Ensure tests pass (`make test`)
-5. Commit changes (`git commit -m 'Add amazing feature'`)
-6. Push to branch (`git push origin feature/amazing-feature`)
-7. Create Pull Request
+### Pull Request Process
+
+1. **Fork** repository
+2. **Create** feature branch (`feature/amazing-feature`)
+3. **Write** tests for changes
+4. **Ensure** tests pass (`task test`)
+5. **Format** code (`task fmt`)
+6. **Commit** changes (`git commit -m 'feat: add amazing feature'`)
+7. **Push** to branch (`git push origin feature/amazing-feature`)
+8. **Create** Pull Request
 
 ### Code Review Checklist
+
 - ✅ Tests written and passing
-- ✅ Code formatted (`make fmt`)
-- ✅ No linter errors (`make lint`)
+- ✅ Code follows project structure
+- ✅ No linter errors
 - ✅ Documentation updated
-- ✅ Migration files if DB changes
+- ✅ Migration files (if DB changes)
+- ✅ No breaking changes (or documented)
+
+### Coding Standards
+
+- Follow Go best practices
+- Use meaningful variable names
+- Add comments for complex logic
+- Keep functions small and focused
+- Follow DRY (Don't Repeat Yourself)
+- Write tests for new features
 
 ## 📚 Additional Resources
 
+### Learning Materials
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [SOLID Principles](https://dave.cheney.net/2016/08/20/solid-go-design)
+- [SOLID Principles in Go](https://dave.cheney.net/2016/08/20/solid-go-design)
+- [Effective Go](https://golang.org/doc/effective_go)
+- [Go Code Review Comments](https://github.com/golang/go/wiki/CodeReviewComments)
+
+### Documentation
 - [Gin Documentation](https://gin-gonic.com/docs/)
 - [GORM Documentation](https://gorm.io/docs/)
-- [Testing in Go](https://go.dev/doc/tutorial/add-a-test)
+- [Asynq Documentation](https://github.com/hibiken/asynq)
+- [Docker Documentation](https://docs.docker.com/)
+- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+
+### Tools
+- [Task](https://taskfile.dev/) - Task runner
+- [golangci-lint](https://golangci-lint.run/) - Go linters
+- [Air](https://github.com/cosmtrek/air) - Live reload
+- [Swagger](https://swagger.io/) - API documentation
 
 ## 📄 License
 
-MIT License
+MIT License - see [LICENSE](LICENSE) file for details
+
+---
+
+## 🎯 Quick Reference
+
+### Most Used Commands
+
+```bash
+# Development
+task dev              # Start everything
+task run              # Run app only
+task test             # Run tests
+
+# Docker
+task docker-up        # Start services
+task docker-down      # Stop services
+task docker-logs      # View logs
+
+# Database
+task migrate-up       # Run migrations
+task migrate-down     # Rollback
+```
+
+### Environment Variables Template
+
+```
+# Application
+APP_ENV=development
+APP_PORT=8080
+
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=barber_db
+
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
+
+# JWT
+JWT_SECRET=your-secret-key
+
+# Email
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASSWORD=your-app-password
+```
+
+### Git Flow Summary
+
+```bash
+# Feature development
+feature/xxx -> PR -> dev -> merge -> Docker :dev
+
+# Production release
+dev -> PR -> main -> merge
+git tag v1.0.0 → Docker :v1.0.0 :latest
+
+# Hotfix
+main -> hotfix/xxx -> PR -> main -> merge
+git tag v1.0.1 -> Docker :v1.0.1 :latest
+```
 
 ---
 
 **Happy Coding! 🚀**
 
-Jika ada pertanyaan atau issue, silakan buat issue di repository atau hubungi maintainer.
+For questions or issues, please create an issue or contact the maintainer.
+
+**Maintainer:** [Haryanda Alfitroh](https://github.com/Haryandaal)

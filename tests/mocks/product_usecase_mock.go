@@ -1,8 +1,8 @@
 package mocks
 
 import (
-	"bLink-app/internal/features/product"
 	"context"
+	"cukkr-app/internal/features/product"
 
 	"github.com/stretchr/testify/mock"
 )

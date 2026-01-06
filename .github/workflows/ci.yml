@@ -17,7 +17,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: cukurly_db
+          POSTGRES_DB: cukkr_db
         ports:
           - 5432:5432
         options: >-
@@ -55,7 +55,7 @@ jobs:
           DB_PORT: 5432
           DB_USER: postgres
           DB_PASSWORD: postgres
-          DB_NAME: cukurly_db
+          DB_NAME: cukkr_db
           REDIS_HOST: localhost
           REDIS_PORT: 6379
           APP_ENV: test

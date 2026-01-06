@@ -1,7 +1,7 @@
 package product
 
 import (
-	"bLink-app/pkg/jwt"
+	"cukkr-app/pkg/jwt"
 
 	"github.com/gin-gonic/gin"
 )
