@@ -1,9 +1,9 @@
 package user
 
 import (
-	"cukurly-app/pkg/errors"
-	"cukurly-app/pkg/jwt"
-	"cukurly-app/pkg/logger"
+	"cukkr-app/pkg/errors"
+	"cukkr-app/pkg/jwt"
+	"cukkr-app/pkg/logger"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )

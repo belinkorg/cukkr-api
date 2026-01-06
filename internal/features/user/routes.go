@@ -1,8 +1,8 @@
 package user
 
 import (
-	"cukurly-app/internal/middleware"
-	"cukurly-app/pkg/jwt"
+	"cukkr-app/internal/middleware"
+	"cukkr-app/pkg/jwt"
 	"github.com/gin-gonic/gin"
 )
 

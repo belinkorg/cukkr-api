@@ -1,4 +1,4 @@
-module cukurly-app
+module cukkr-app
 
 go 1.24.0
 

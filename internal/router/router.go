@@ -1,19 +1,19 @@
 package router
 
 import (
-	"cukurly-app/internal/features/order"
-	"cukurly-app/internal/features/product"
-	"cukurly-app/internal/features/user"
-	"cukurly-app/internal/middleware"
-	"cukurly-app/pkg/jwt"
-	"cukurly-app/pkg/logger"
+	"cukkr-app/internal/features/order"
+	"cukkr-app/internal/features/product"
+	"cukkr-app/internal/features/user"
+	"cukkr-app/internal/middleware"
+	"cukkr-app/pkg/jwt"
+	"cukkr-app/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	_ "cukurly-app/docs" // Import swagger docs
+	_ "cukkr-app/docs" // Import swagger docs
 )
 
 type Router struct {

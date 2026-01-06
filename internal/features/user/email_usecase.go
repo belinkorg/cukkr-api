@@ -1,7 +1,7 @@
 package user
 
 import (
-	"cukurly-app/pkg/logger"
+	"cukkr-app/pkg/logger"
 	"fmt"
 	"gopkg.in/mail.v2"
 	"os"

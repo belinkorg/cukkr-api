@@ -1,7 +1,7 @@
 package main
 
 import (
-	"cukurly-app/config"
+	"cukkr-app/config"
 	"database/sql"
 	"flag"
 	"fmt"

@@ -48,7 +48,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                    "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -67,13 +67,13 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -112,7 +112,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                    "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -128,19 +128,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -179,7 +179,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                    "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -195,19 +195,19 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -255,7 +255,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                    "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -271,25 +271,25 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -314,7 +314,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                    "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -333,7 +333,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -372,7 +372,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                    "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -388,19 +388,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -434,7 +434,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                    "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -450,13 +450,13 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -502,7 +502,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                    "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -518,25 +518,25 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -571,25 +571,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -635,7 +635,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                    "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -654,13 +654,13 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -688,25 +688,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -745,25 +745,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -799,7 +799,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                    "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -815,19 +815,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -857,7 +857,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                    "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -873,19 +873,19 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -924,7 +924,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                    "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -940,25 +940,25 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -999,7 +999,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                    "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -1015,19 +1015,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -1063,7 +1063,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                                    "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                                 },
                                 {
                                     "type": "object",
@@ -1079,19 +1079,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/bLink-app_pkg_response.Response"
+                            "$ref": "#/definitions/cukkr-app_pkg_response.Response"
                         }
                     }
                 }
@@ -1099,7 +1099,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "bLink-app_pkg_response.Response": {
+        "cukkr-app_pkg_response.Response": {
             "type": "object",
             "properties": {
                 "data": {},
@@ -1470,7 +1470,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8080",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "bLink App API",
+	Title:            "cukkr App API",
 	Description:      "Clean Architecture REST API with Go, Gin, PostgreSQL, Redis, and MongoDB",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

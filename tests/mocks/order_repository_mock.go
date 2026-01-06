@@ -2,7 +2,7 @@ package mocks
 
 import (
 	"context"
-	"cukurly-app/internal/features/order"
+	"cukkr-app/internal/features/order"
 
 	"github.com/stretchr/testify/mock"
 )

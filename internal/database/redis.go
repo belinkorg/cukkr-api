@@ -2,7 +2,7 @@ package database
 
 import (
 	"context"
-	"cukurly-app/config"
+	"cukkr-app/config"
 	"fmt"
 
 	"github.com/redis/go-redis/v9"

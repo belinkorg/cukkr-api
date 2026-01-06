@@ -1,9 +1,9 @@
 package order
 
 import (
-	"cukurly-app/pkg/helper"
-	"cukurly-app/pkg/jwt"
-	"cukurly-app/pkg/response"
+	"cukkr-app/pkg/helper"
+	"cukkr-app/pkg/jwt"
+	"cukkr-app/pkg/response"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

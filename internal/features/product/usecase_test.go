@@ -8,10 +8,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	"cukurly-app/internal/features/product"
-	"cukurly-app/pkg/errors"
-	"cukurly-app/tests/mocks"
-	"cukurly-app/tests/testutil"
+	"cukkr-app/internal/features/product"
+	"cukkr-app/pkg/errors"
+	"cukkr-app/tests/mocks"
+	"cukkr-app/tests/testutil"
 )
 
 // --- UUID Helper lokal untuk test ---

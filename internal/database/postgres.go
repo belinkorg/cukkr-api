@@ -1,7 +1,7 @@
 package database
 
 import (
-	"cukurly-app/config"
+	"cukkr-app/config"
 	"fmt"
 
 	"gorm.io/driver/postgres"

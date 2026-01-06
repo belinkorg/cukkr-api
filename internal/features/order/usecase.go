@@ -2,9 +2,9 @@ package order
 
 import (
 	"context"
-	"cukurly-app/internal/features/product"
-	"cukurly-app/pkg/errors"
-	"cukurly-app/pkg/logger"
+	"cukkr-app/internal/features/product"
+	"cukkr-app/pkg/errors"
+	"cukkr-app/pkg/logger"
 	"fmt"
 	"gorm.io/gorm"
 	"net/http"

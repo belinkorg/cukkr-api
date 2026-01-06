@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"cukurly-app/pkg/errors"
-	"cukurly-app/pkg/jwt"
-	"cukurly-app/pkg/response"
+	"cukkr-app/pkg/errors"
+	"cukkr-app/pkg/jwt"
+	"cukkr-app/pkg/response"
 	"net/http"
 	"strings"
 

@@ -2,12 +2,12 @@ package product_test
 
 import (
 	"bytes"
-	"cukurly-app/internal/features/product"
-	_ "cukurly-app/pkg/errors"
-	"cukurly-app/pkg/helper"
-	"cukurly-app/pkg/logger"
-	"cukurly-app/pkg/validator"
-	"cukurly-app/tests/mocks"
+	"cukkr-app/internal/features/product"
+	_ "cukkr-app/pkg/errors"
+	"cukkr-app/pkg/helper"
+	"cukkr-app/pkg/logger"
+	"cukkr-app/pkg/validator"
+	"cukkr-app/tests/mocks"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"

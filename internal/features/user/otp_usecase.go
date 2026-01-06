@@ -2,8 +2,8 @@ package user
 
 import (
 	"context"
-	"cukurly-app/pkg/errors"
-	"cukurly-app/pkg/logger"
+	"cukkr-app/pkg/errors"
+	"cukkr-app/pkg/logger"
 	"fmt"
 	"math/rand"
 	"net/http"

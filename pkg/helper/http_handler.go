@@ -1,10 +1,10 @@
 package helper
 
 import (
-	"cukurly-app/pkg/errors"
-	"cukurly-app/pkg/logger"
-	"cukurly-app/pkg/response"
-	"cukurly-app/pkg/validator"
+	"cukkr-app/pkg/errors"
+	"cukkr-app/pkg/logger"
+	"cukkr-app/pkg/response"
+	"cukkr-app/pkg/validator"
 	"fmt"
 	"net/http"
 

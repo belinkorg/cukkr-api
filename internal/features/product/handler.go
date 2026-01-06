@@ -1,8 +1,8 @@
 package product
 
 import (
-	"cukurly-app/pkg/helper"
-	"cukurly-app/pkg/response"
+	"cukkr-app/pkg/helper"
+	"cukkr-app/pkg/response"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

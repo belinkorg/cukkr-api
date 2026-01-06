@@ -70,7 +70,7 @@ func LoadConfig() (*Config, error) {
 			Port:     getEnv("POSTGRES_PORT", "5432"),
 			User:     getEnv("POSTGRES_USER", "postgres"),
 			Password: getEnv("POSTGRES_PASSWORD", "postgres"),
-			Database: getEnv("POSTGRES_DB", "cukurly_db"),
+			Database: getEnv("POSTGRES_DB", "cukkr_db"),
 			SSLMode:  getEnv("POSTGRES_SSL_MODE", "disable"),
 		},
 		Redis: RedisConfig{

@@ -1,7 +1,7 @@
 package product
 
 import (
-	"cukurly-app/pkg/jwt"
+	"cukkr-app/pkg/jwt"
 
 	"github.com/gin-gonic/gin"
 )

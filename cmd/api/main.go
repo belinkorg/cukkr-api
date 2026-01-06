@@ -1,21 +1,21 @@
 package main
 
 import (
-	"cukurly-app/config"
-	"cukurly-app/internal/database"
-	"cukurly-app/internal/features/order"
-	"cukurly-app/internal/features/product"
-	"cukurly-app/internal/features/user"
-	"cukurly-app/internal/router"
-	"cukurly-app/pkg/helper"
-	"cukurly-app/pkg/jwt"
-	"cukurly-app/pkg/logger"
-	"cukurly-app/pkg/validator"
+	"cukkr-app/config"
+	"cukkr-app/internal/database"
+	"cukkr-app/internal/features/order"
+	"cukkr-app/internal/features/product"
+	"cukkr-app/internal/features/user"
+	"cukkr-app/internal/router"
+	"cukkr-app/pkg/helper"
+	"cukkr-app/pkg/jwt"
+	"cukkr-app/pkg/logger"
+	"cukkr-app/pkg/validator"
 	"fmt"
 	"log"
 )
 
-//	@title			bLink App API
+//	@title			cukkr App API
 //	@version		1.0
 //	@description	Clean Architecture REST API with Go, Gin, PostgreSQL, Redis, and MongoDB
 //	@termsOfService	http://swagger.io/terms/

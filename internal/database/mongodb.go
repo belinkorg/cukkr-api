@@ -2,7 +2,7 @@ package database
 
 import (
 	"context"
-	"cukurly-app/config"
+	"cukkr-app/config"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"

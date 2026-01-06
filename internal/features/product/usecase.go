@@ -2,8 +2,8 @@ package product
 
 import (
 	"context"
-	"cukurly-app/pkg/errors"
-	"cukurly-app/pkg/logger"
+	"cukkr-app/pkg/errors"
+	"cukkr-app/pkg/logger"
 	"gorm.io/gorm"
 	"net/http"
 )
